@@ -1,7 +1,7 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
-namespace H.NET.Utilities
+namespace H.Hooks
 {
     /// <summary>
     /// Values from Winuser.h in Microsoft SDK.

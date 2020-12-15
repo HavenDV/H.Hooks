@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace H.NET.Utilities
+namespace H.Hooks
 {
     /// <summary>
     /// Windows.Forms MouseEventArgs code

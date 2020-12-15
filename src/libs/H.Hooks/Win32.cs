@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace H.NET.Utilities
+namespace H.Hooks
 {
     public static class Win32
     {

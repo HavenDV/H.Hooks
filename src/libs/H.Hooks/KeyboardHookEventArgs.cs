@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace H.NET.Utilities
+namespace H.Hooks
 {
     public class KeyboardHookEventArgs
     {

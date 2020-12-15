@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace H.NET.Utilities
+namespace H.Hooks
 {
     public abstract class Hook : IDisposable
     {

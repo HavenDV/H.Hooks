@@ -1,4 +1,4 @@
-﻿namespace H.NET.Utilities
+﻿namespace H.Hooks
 {
     /// <summary>
     /// Provides data for the MouseClickExt and MouseMoveExt events. It also provides a property Handled.
