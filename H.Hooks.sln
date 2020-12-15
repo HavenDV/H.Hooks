@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "$PROJECT_NAME$", "src\libs\$PROJECT_NAME$\$PROJECT_NAME$.csproj", "{8C39C5CD-A8D1-4528-9FCE-0190BD515466}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Hooks", "src\libs\H.Hooks\H.Hooks.csproj", "{8C39C5CD-A8D1-4528-9FCE-0190BD515466}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "libs", "libs", "{6E5BF389-3D3F-4D74-9DD0-3B199CB529C5}"
 	ProjectSection(SolutionItems) = preProject
@@ -23,7 +23,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "$PROJECT_NAME$.UnitTests", "src\tests\$PROJECT_NAME$.UnitTests\$PROJECT_NAME$.UnitTests.csproj", "{F2548AE2-D736-4C21-942F-55C4F592EFF2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Hooks.UnitTests", "src\tests\H.Hooks.UnitTests\H.Hooks.UnitTests.csproj", "{F2548AE2-D736-4C21-942F-55C4F592EFF2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

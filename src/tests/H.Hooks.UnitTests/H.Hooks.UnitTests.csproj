@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\libs\$PROJECT_NAME$\$PROJECT_NAME$.csproj" />
+    <ProjectReference Include="..\..\libs\H.Hooks\H.Hooks.csproj" />
   </ItemGroup>
 
 </Project>
