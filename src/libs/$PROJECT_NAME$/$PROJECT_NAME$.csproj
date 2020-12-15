@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
+  </PropertyGroup>
+
+  <PropertyGroup Label="NuGet">
+    <Version>0.9.0</Version>
+    <Description>$PROJECT_DESCRIPTION$</Description>
+    <PackageReleaseNotes>Initial release.</PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>

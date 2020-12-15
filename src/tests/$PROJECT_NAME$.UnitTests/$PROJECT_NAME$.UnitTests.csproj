@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;net4.8</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\libs\$PROJECT_NAME$\$PROJECT_NAME$.csproj" />
+  </ItemGroup>
+
+</Project>

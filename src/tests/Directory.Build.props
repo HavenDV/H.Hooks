@@ -1,0 +1,15 @@
+<Project>
+
+  <Import Project="..\Directory.Build.props" />
+  
+  <PropertyGroup>
+    <TestProjectType>UnitTest</TestProjectType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.0-preview-20201020-06" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+  </ItemGroup>
+
+</Project>
