@@ -3,8 +3,12 @@
   <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup Label="Nuget">
+    <Version>1.0.0</Version>
+    <PackageReleaseNotes>
+      Initial release.
+    </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
     <Authors>havendv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/HavenDV/H.Hooks</PackageProjectUrl>
@@ -46,11 +50,11 @@
     </AssemblyAttribute>
   </ItemGroup>
 
-  <ItemGroup Label="Analyzers">
+  <!--<ItemGroup Label="Analyzers">
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.3.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
+  </ItemGroup>-->
 
 </Project>
