@@ -1,4 +1,3 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30717.126
@@ -25,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Hooks.UnitTests", "src\tests\H.Hooks.UnitTests\H.Hooks.UnitTests.csproj", "{F2548AE2-D736-4C21-942F-55C4F592EFF2}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "H.Interop", "src\libs\H.Interop\H.Interop.csproj", "{492A08E3-CBC1-4EF6-BE9B-DF685383D86A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +40,10 @@ Global
 		{F2548AE2-D736-4C21-942F-55C4F592EFF2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2548AE2-D736-4C21-942F-55C4F592EFF2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2548AE2-D736-4C21-942F-55C4F592EFF2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{492A08E3-CBC1-4EF6-BE9B-DF685383D86A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{492A08E3-CBC1-4EF6-BE9B-DF685383D86A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{492A08E3-CBC1-4EF6-BE9B-DF685383D86A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{492A08E3-CBC1-4EF6-BE9B-DF685383D86A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +51,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8C39C5CD-A8D1-4528-9FCE-0190BD515466} = {6E5BF389-3D3F-4D74-9DD0-3B199CB529C5}
 		{F2548AE2-D736-4C21-942F-55C4F592EFF2} = {9CAA231D-7BE1-46C9-ACD6-EB2E569CEBEA}
+		{492A08E3-CBC1-4EF6-BE9B-DF685383D86A} = {6E5BF389-3D3F-4D74-9DD0-3B199CB529C5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1493AEE4-9211-46E9-BFE6-8F629EAC5693}
