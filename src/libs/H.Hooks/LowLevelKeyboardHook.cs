@@ -20,14 +20,6 @@ namespace H.Hooks
 
         #endregion
 
-        #region Constructors
-
-        public LowLevelKeyboardHook() : base(nameof(LowLevelKeyboardHook))
-        {
-        }
-
-        #endregion
-
         #region Protected methods
 
         public void Start()

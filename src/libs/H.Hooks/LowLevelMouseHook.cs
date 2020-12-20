@@ -17,14 +17,6 @@ namespace H.Hooks
 
         #endregion
 
-        #region Constructors
-
-        public LowLevelMouseHook() : base(nameof(LowLevelMouseHook))
-        {
-        }
-
-        #endregion
-
         #region Protected methods
 
         public void Start()

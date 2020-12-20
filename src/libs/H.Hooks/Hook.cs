@@ -15,7 +15,6 @@ namespace H.Hooks
 
         #region Properties
 
-        public string Name { get; }
         public bool IsStarted { get; private set; }
 
         private IntPtr HookHandle { get; set; }
@@ -37,15 +36,6 @@ namespace H.Hooks
 
         #endregion
 
-        #region Constructors
-
-        protected Hook(string name)
-        {
-            Name = name;
-        }
-
-        #endregion
-
         #region Public methods
 
         /// <summary>
@@ -58,8 +48,6 @@ namespace H.Hooks
             {
                 return;
             }
-
-            Trace.WriteLine($"Starting hook '{Name}'...", $"Hook.StartHook [{Thread.CurrentThread.Name}]");
 
             HookAction = Callback;
             var moduleHandle = Kernel32Methods.GetCurrentProcessModuleHandle();
@@ -78,8 +66,6 @@ namespace H.Hooks
             {
                 return;
             }
-
-            Trace.WriteLine($"Stopping hook '{Name}'...", $"Hook.StartHook [{Thread.CurrentThread.Name}]");
 
             User32.UnhookWindowsHookEx(HookHandle);
 
