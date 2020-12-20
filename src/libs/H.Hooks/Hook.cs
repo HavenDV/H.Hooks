@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
 using H.Hooks.Core;
+using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
@@ -63,11 +64,7 @@ namespace H.Hooks
             HookAction = Callback;
             var moduleHandle = Kernel32Methods.GetCurrentProcessModuleHandle();
 
-            HookHandle = User32.SetWindowsHookEx(type, HookAction, moduleHandle, 0);
-            if (HookHandle == null || HookHandle == IntPtr.Zero)
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
+            HookHandle = User32.SetWindowsHookEx(type, HookAction, moduleHandle, 0).Check();
 
             IsStarted = true;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Runtime.InteropServices;
 using H.Hooks.Core.Interop;
 
 namespace H.Hooks.Core
@@ -15,13 +14,7 @@ namespace H.Hooks.Core
         /// <returns></returns>
         public static IntPtr GetCurrentProcessModuleHandle()
         {
-            var ptr = Kernel32.GetModuleHandle(null);
-            if (ptr == IntPtr.Zero)
-            {
-                throw new Win32Exception(Marshal.GetLastWin32Error());
-            }
-
-            return ptr;
+            return Kernel32.GetModuleHandle(null).Check();
         }
     }
 }
