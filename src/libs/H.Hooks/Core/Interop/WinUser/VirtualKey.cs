@@ -3,7 +3,7 @@
     /// <summary>
     /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h#L437
     /// </summary>
-    public enum VirtualKey
+    internal enum VirtualKey
     {
         /// <summary>
         /// 

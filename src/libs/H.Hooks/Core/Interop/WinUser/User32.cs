@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
-using H.Hooks.Core.Interop.WinUser;
 
-namespace H.Hooks.Core.Interop
+namespace H.Hooks.Core.Interop.WinUser
 {
     internal static class User32
     {

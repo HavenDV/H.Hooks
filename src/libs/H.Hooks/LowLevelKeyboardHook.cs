@@ -22,13 +22,18 @@ namespace H.Hooks
 
         #region Constructors
 
-        public LowLevelKeyboardHook() : base("Low Level Keyboard Hook", HookProcedureType.KeyboardLowLevel)
+        public LowLevelKeyboardHook() : base(nameof(LowLevelKeyboardHook))
         {
         }
 
         #endregion
 
         #region Protected methods
+
+        public void Start()
+        {
+            Start(HookProcedureType.KeyboardLowLevel);
+        }
 
         protected override IntPtr InternalCallback(int code, int wParam, IntPtr lParamPtr)
         {

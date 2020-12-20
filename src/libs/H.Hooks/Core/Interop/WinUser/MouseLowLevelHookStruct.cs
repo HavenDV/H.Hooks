@@ -7,7 +7,7 @@ namespace H.Hooks.Core.Interop.WinUser
     /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h#L1112 
     /// </summary>
     [StructLayout(LayoutKind.Sequential)]
-    public struct MouseLowLevelHookStruct
+    internal struct MouseLowLevelHookStruct
     {
         /// <summary>
         /// Specifies a Point structure that contains the X- and Y-coordinates of the cursor, in screen coordinates. 

@@ -1,12 +1,12 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
-namespace H.Hooks.Core
+namespace H.Hooks.Core.Interop.WinUser
 {
     /// <summary>
     /// Values from Winuser.h in Microsoft SDK.
     /// </summary>
-    public static class Winuser
+    internal static class WindowsMessages
     {
         /// <summary>
         /// The WM_MOUSEMOVE message is posted to a window when the cursor moves. 

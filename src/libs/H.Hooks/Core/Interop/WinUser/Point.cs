@@ -9,7 +9,7 @@ namespace H.Hooks.Core.Interop.WinUser
     /// http://msdn.microsoft.com/library/default.asp?url=/library/en-us/gdi/rectangl_0tiq.asp
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct Point
+    internal struct Point
     {
         /// <summary>
         /// Specifies the X-coordinate of the point. 

@@ -17,7 +17,6 @@ namespace H.Hooks
         public string Name { get; }
         public bool IsStarted { get; private set; }
 
-        private HookProcedureType Type { get; }
         private IntPtr HookHandle { get; set; }
         private HookProc? HookAction { get; set; }
 
@@ -39,10 +38,9 @@ namespace H.Hooks
 
         #region Constructors
 
-        protected Hook(string name, HookProcedureType type)
+        protected Hook(string name)
         {
             Name = name;
-            Type = type;
         }
 
         #endregion
@@ -53,7 +51,7 @@ namespace H.Hooks
         /// Start hook process
         /// </summary>
         /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
-        public void Start()
+        internal void Start(HookProcedureType type)
         {
             if (IsStarted)
             {
@@ -65,7 +63,7 @@ namespace H.Hooks
             HookAction = Callback;
             var moduleHandle = Kernel32.GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
 
-            HookHandle = User32.SetWindowsHookEx(Type, HookAction, moduleHandle, 0);
+            HookHandle = User32.SetWindowsHookEx(type, HookAction, moduleHandle, 0);
             if (HookHandle == null || HookHandle == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -89,23 +87,6 @@ namespace H.Hooks
             User32.UnhookWindowsHookEx(HookHandle);
 
             IsStarted = false;
-        }
-
-        /// <summary>
-        /// Start(if <paramref name="value"/> is <see langword="true"/>) or 
-        /// Stop(if <paramref name="value"/> is <see langword="false"/>) hook process
-        /// </summary>
-        /// <param name="value"></param>
-        public void SetEnabled(bool value)
-        {
-            if (value)
-            {
-                Start();
-            }
-            else
-            {
-                Stop();
-            }
         }
 
         #endregion

@@ -10,7 +10,7 @@ namespace H.Hooks.Core.Interop.WinUser
     /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h#L1101
     /// </remarks>
     [StructLayout(LayoutKind.Sequential)]
-    public struct KeyboardHookStruct
+    internal struct KeyboardHookStruct
     {
         /// <summary>
         /// Specifies a virtual-key code. The code must be a value in the range 1 to 254. 

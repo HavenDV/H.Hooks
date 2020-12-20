@@ -1,5 +1,4 @@
 ﻿using System;
-using H.Hooks.Core;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
@@ -20,7 +19,7 @@ namespace H.Hooks
 
         #region Constructors
 
-        public LowLevelMouseHook() : base("Low Level Mouse Hook", HookProcedureType.MouseLowLevel)
+        public LowLevelMouseHook() : base(nameof(LowLevelMouseHook))
         {
         }
 
@@ -28,6 +27,11 @@ namespace H.Hooks
 
         #region Protected methods
 
+        public void Start()
+        {
+            Start(HookProcedureType.MouseLowLevel);
+        }
+        
         protected override IntPtr InternalCallback(int nCode, int wParam, IntPtr lParamPtr)
         {
             if (nCode < 0)
@@ -47,52 +51,52 @@ namespace H.Hooks
 
             switch (wParam)
             {
-                case Winuser.WM_LBUTTONDOWN:
+                case WindowsMessages.WM_LBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.Left;
                     clickCount = 1;
                     break;
-                case Winuser.WM_LBUTTONUP:
+                case WindowsMessages.WM_LBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.Left;
                     clickCount = 1;
                     break;
-                case Winuser.WM_LBUTTONDBLCLK:
+                case WindowsMessages.WM_LBUTTONDBLCLK:
                     button = MouseButtons.Left;
                     clickCount = 2;
                     break;
-                case Winuser.WM_RBUTTONDOWN:
+                case WindowsMessages.WM_RBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.Right;
                     clickCount = 1;
                     break;
-                case Winuser.WM_RBUTTONUP:
+                case WindowsMessages.WM_RBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.Right;
                     clickCount = 1;
                     break;
-                case Winuser.WM_RBUTTONDBLCLK:
+                case WindowsMessages.WM_RBUTTONDBLCLK:
                     button = MouseButtons.Right;
                     clickCount = 2;
                     break;
-                case Winuser.WM_XBUTTONDOWN:
-                case Winuser.WM_NCXBUTTONDOWN:
+                case WindowsMessages.WM_XBUTTONDOWN:
+                case WindowsMessages.WM_NCXBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.XButton1;
                     clickCount = 1;
                     break;
-                case Winuser.WM_XBUTTONUP:
-                case Winuser.WM_NCXBUTTONUP:
+                case WindowsMessages.WM_XBUTTONUP:
+                case WindowsMessages.WM_NCXBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.XButton1;
                     clickCount = 1;
                     break;
-                case Winuser.WM_XBUTTONDBLCLK:
-                case Winuser.WM_NCXBUTTONDBLCLK:
+                case WindowsMessages.WM_XBUTTONDBLCLK:
+                case WindowsMessages.WM_NCXBUTTONDBLCLK:
                     button = MouseButtons.XButton1;
                     clickCount = 2;
                     break;
-                case Winuser.WM_MOUSEWHEEL:
+                case WindowsMessages.WM_MOUSEWHEEL:
                     //If the message is WM_MOUSEWHEEL, the high-order word of MouseData member is the wheel delta. 
                     //One wheel click is defined as WHEEL_DELTA, which is 120. 
                     //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
@@ -105,7 +109,7 @@ namespace H.Hooks
                     //Otherwise, MouseData is not used. 
                     break;
 
-                case Winuser.WM_MOUSEMOVE:
+                case WindowsMessages.WM_MOUSEMOVE:
                     mouseMove = true;
                     break;
 
