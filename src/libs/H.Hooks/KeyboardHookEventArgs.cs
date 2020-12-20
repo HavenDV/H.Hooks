@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using H.Hooks.Core.Interop;
+using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
 {
@@ -30,25 +32,25 @@ namespace H.Hooks
         public bool IsLWinPressed { get; }
         public bool IsRWinPressed { get; }
 
-        private static bool Check(Keys key, Win32.VirtualKey virtualKey, Keys realKey) =>
-            Convert.ToBoolean(Win32.GetKeyState(virtualKey) & KeyPressed) || key == realKey;
+        private static bool Check(Keys key, VirtualKey virtualKey, Keys realKey) =>
+            Convert.ToBoolean(User32.GetKeyState(virtualKey) & KeyPressed) || key == realKey;
 
-        internal KeyboardHookEventArgs(Win32.KeyboardHookStruct lParam)
+        internal KeyboardHookEventArgs(KeyboardHookStruct lParam)
         {
             Key = (Keys)lParam.VirtualKeyCode;
 
             //Control.ModifierKeys doesn't capture alt/win, and doesn't have r/l granularity
-            IsLAltPressed = Check(Key, Win32.VirtualKey.LAlt, Keys.LMenu);
-            IsRAltPressed = Check(Key, Win32.VirtualKey.RAlt, Keys.RMenu);
+            IsLAltPressed = Check(Key, VirtualKey.LeftAlt, Keys.LMenu);
+            IsRAltPressed = Check(Key, VirtualKey.RightAlt, Keys.RMenu);
 
-            IsLCtrlPressed = Check(Key, Win32.VirtualKey.LControl, Keys.LControlKey);
-            IsRCtrlPressed = Check(Key, Win32.VirtualKey.RControl, Keys.RControlKey);
+            IsLCtrlPressed = Check(Key, VirtualKey.LeftControl, Keys.LControlKey);
+            IsRCtrlPressed = Check(Key, VirtualKey.RightControl, Keys.RControlKey);
 
-            IsLShiftPressed = Check(Key, Win32.VirtualKey.LShift, Keys.LShiftKey);
-            IsRShiftPressed = Check(Key, Win32.VirtualKey.RShift, Keys.RShiftKey);
+            IsLShiftPressed = Check(Key, VirtualKey.LeftShift, Keys.LShiftKey);
+            IsRShiftPressed = Check(Key, VirtualKey.RightShift, Keys.RShiftKey);
 
-            IsLWinPressed = Check(Key, Win32.VirtualKey.LWin, Keys.LWin);
-            IsRWinPressed = Check(Key, Win32.VirtualKey.RWin, Keys.RWin);
+            IsLWinPressed = Check(Key, VirtualKey.LeftWin, Keys.LWin);
+            IsRWinPressed = Check(Key, VirtualKey.RightWin, Keys.RWin);
 
             if (new[] { Keys.LMenu, Keys.RMenu, Keys.LControlKey, Keys.RControlKey, Keys.LShiftKey, Keys.RShiftKey, Keys.LWin, Keys.RWin }.Contains(Key))
             {

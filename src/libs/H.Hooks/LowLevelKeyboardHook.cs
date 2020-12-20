@@ -1,4 +1,6 @@
 ﻿using System;
+using H.Hooks.Core;
+using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
 {
@@ -8,7 +10,7 @@ namespace H.Hooks
 
         public bool OneUpEvent { get; set; } = true;
 
-        private Tuple<int, int>? LastState { get; set; }
+        private Tuple<uint, uint>? LastState { get; set; }
 
         #endregion
 
@@ -21,7 +23,7 @@ namespace H.Hooks
 
         #region Constructors
 
-        public LowLevelKeyboardHook() : base("Low Level Keyboard Hook", Winuser.WH_KEYBOARD_LL)
+        public LowLevelKeyboardHook() : base("Low Level Keyboard Hook", HookProcedureType.KeyboardLowLevel)
         {
         }
 
@@ -36,14 +38,14 @@ namespace H.Hooks
                 return 0;
             }
 
-            var lParam = ToStructure<Win32.KeyboardHookStruct>(lParamPtr);
+            var lParam = ToStructure<KeyboardHookStruct>(lParamPtr);
             if (OneUpEvent)
             {
                 if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)
                 {
                     return 0;
                 }
-                LastState = new Tuple<int, int>(lParam.VirtualKeyCode, lParam.Flags);
+                LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
             }
 
             var isKeyDown = lParam.Flags >> 7 == 0;

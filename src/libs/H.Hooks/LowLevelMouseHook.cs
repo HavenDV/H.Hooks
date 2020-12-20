@@ -1,4 +1,6 @@
 ﻿using System;
+using H.Hooks.Core;
+using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
 {
@@ -18,7 +20,7 @@ namespace H.Hooks
 
         #region Constructors
 
-        public LowLevelMouseHook() : base("Low Level Mouse Hook", Winuser.WH_MOUSE_LL)
+        public LowLevelMouseHook() : base("Low Level Mouse Hook", HookProcedureType.MouseLowLevel)
         {
         }
 
@@ -33,7 +35,7 @@ namespace H.Hooks
                 return 0;
             }
 
-            var lParam = ToStructure<Win32.MouseLowLevelHookStruct>(lParamPtr);
+            var lParam = ToStructure<MouseLowLevelHookStruct>(lParamPtr);
 
             //detect button clicked
             MouseButtons button = MouseButtons.None;

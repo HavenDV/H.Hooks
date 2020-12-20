@@ -3,6 +3,8 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
+using H.Hooks.Core.Interop;
+using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
 {
@@ -15,9 +17,9 @@ namespace H.Hooks
         public string Name { get; }
         public bool IsStarted { get; private set; }
 
-        private int HookId { get; }
+        private HookProcedureType Type { get; }
         private IntPtr HookHandle { get; set; }
-        private Win32.HookProc? HookAction { get; set; }
+        private HookProc? HookAction { get; set; }
 
         #endregion
 
@@ -29,10 +31,10 @@ namespace H.Hooks
 
         #region Constructors
 
-        protected Hook(string name, int hookId)
+        protected Hook(string name, HookProcedureType type)
         {
             Name = name;
-            HookId = hookId;
+            Type = type;
         }
 
         #endregion
@@ -53,9 +55,9 @@ namespace H.Hooks
             Trace.WriteLine($"Starting hook '{Name}'...", $"Hook.StartHook [{Thread.CurrentThread.Name}]");
 
             HookAction = Callback;
-            var moduleHandle = Win32.GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
+            var moduleHandle = Kernel32.GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
 
-            HookHandle = Win32.SetWindowsHookEx(HookId, HookAction, moduleHandle, 0);
+            HookHandle = User32.SetWindowsHookEx(Type, HookAction, moduleHandle, 0);
             if (HookHandle == null || HookHandle == IntPtr.Zero)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
@@ -76,7 +78,7 @@ namespace H.Hooks
 
             Trace.WriteLine($"Stopping hook '{Name}'...", $"Hook.StartHook [{Thread.CurrentThread.Name}]");
 
-            Win32.UnhookWindowsHookEx(HookHandle);
+            User32.UnhookWindowsHookEx(HookHandle);
 
             IsStarted = false;
         }
@@ -123,7 +125,7 @@ namespace H.Hooks
                 UnhandledException?.Invoke(this, new UnhandledExceptionEventArgs(exception, false));
             }
 
-            return result < 0 ? result : Win32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+            return result < 0 ? result : User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
         #endregion

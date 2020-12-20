@@ -1,33 +1,13 @@
 ﻿// ReSharper disable InconsistentNaming
 // ReSharper disable IdentifierTypo
 // ReSharper disable CommentTypo
-namespace H.Hooks
+namespace H.Hooks.Core
 {
     /// <summary>
     /// Values from Winuser.h in Microsoft SDK.
     /// </summary>
     public static class Winuser
     {
-        /// <summary>
-        /// Installs a hook procedure that monitors keystroke messages. For more information, see the KeyboardProc hook procedure. 
-        /// </summary>
-        public const int WH_KEYBOARD = 2;
-
-        /// <summary>
-        /// Installs a hook procedure that monitors mouse messages. For more information, see the MouseProc hook procedure. 
-        /// </summary>
-        public const int WH_MOUSE = 7;
-
-        /// <summary>
-        /// Windows NT/2000/XP: Installs a hook procedure that monitors low-level keyboard  input events.
-        /// </summary>
-        public const int WH_KEYBOARD_LL = 13;
-
-        /// <summary>
-        /// Windows NT/2000/XP: Installs a hook procedure that monitors low-level mouse input events.
-        /// </summary>
-        public const int WH_MOUSE_LL = 14;
-
         /// <summary>
         /// The WM_MOUSEMOVE message is posted to a window when the cursor moves. 
         /// </summary>
@@ -122,9 +102,5 @@ namespace H.Hooks
         /// these two contexts by checking the context code in the lParam parameter. 
         /// </summary>
         public const int WM_SYSKEYUP = 0x105;
-
-        public const byte VK_SHIFT = 0x10;
-        public const byte VK_CAPITAL = 0x14;
-        public const byte VK_NUMLOCK = 0x90;
     }
 }
