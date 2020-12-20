@@ -1,8 +1,5 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.Runtime.InteropServices;
-using System.Threading;
 using H.Hooks.Core;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
@@ -18,7 +15,6 @@ namespace H.Hooks
         public bool IsStarted { get; private set; }
 
         private IntPtr HookHandle { get; set; }
-        private HookProc? HookAction { get; set; }
 
         #endregion
 
@@ -36,10 +32,34 @@ namespace H.Hooks
 
         #endregion
 
+        #region Protected methods
+
+        protected abstract IntPtr InternalCallback(int nCode, int wParam, IntPtr lParam);
+
+        #endregion
+
+        #region Private methods
+
+        private IntPtr Callback(int nCode, int wParam, IntPtr lParam)
+        {
+            try
+            {
+                return InternalCallback(nCode, wParam, lParam);
+            }
+            catch (Exception exception)
+            {
+                OnExceptionOccurred(exception);
+
+                return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+            }
+        }
+
+        #endregion
+
         #region Public methods
 
         /// <summary>
-        /// Start hook process
+        /// Starts hook process.
         /// </summary>
         /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
         internal void Start(HookProcedureType type)
@@ -49,10 +69,9 @@ namespace H.Hooks
                 return;
             }
 
-            HookAction = Callback;
             var moduleHandle = Kernel32Methods.GetCurrentProcessModuleHandle();
 
-            HookHandle = User32.SetWindowsHookEx(type, HookAction, moduleHandle, 0).Check();
+            HookHandle = User32.SetWindowsHookEx(type, Callback, moduleHandle, 0).Check();
 
             IsStarted = true;
         }
@@ -71,37 +90,7 @@ namespace H.Hooks
 
             IsStarted = false;
         }
-
-        #endregion
-
-        #region Protected methods
-
-        protected abstract IntPtr InternalCallback(int nCode, int wParam, IntPtr lParam);
-
-        protected static T ToStructure<T>(IntPtr ptr) where T : struct => (T)Marshal.PtrToStructure(ptr, typeof(T));
-
-        #endregion
-
-        #region Private methods
-
-        private IntPtr Callback(int nCode, int wParam, IntPtr lParam)
-        {
-            try
-            {
-                return InternalCallback(nCode, wParam, lParam);
-            }
-            catch (Exception exception)
-            {
-                OnExceptionOccurred(exception);
-                
-                return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
-            }
-        }
-
-        #endregion
-
-        #region IDisposable
-
+        
         /// <summary>
         /// Dispose internal system hook resources.
         /// </summary>

@@ -20,6 +20,17 @@ namespace H.Hooks.Core.Interop
             }
 
             return ptr;
-        } 
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="ptr"></param>
+        /// <returns></returns>
+        public static T ToStructure<T>(IntPtr ptr) where T : struct
+        {
+            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+        }
     }
 }

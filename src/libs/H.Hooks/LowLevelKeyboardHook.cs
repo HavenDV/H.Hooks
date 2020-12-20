@@ -1,4 +1,5 @@
 ﻿using System;
+using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
@@ -34,7 +35,7 @@ namespace H.Hooks
                 return IntPtr.Zero;
             }
 
-            var lParam = ToStructure<KeyboardHookStruct>(lParamPtr);
+            var lParam = InteropUtilities.ToStructure<KeyboardHookStruct>(lParamPtr);
             if (OneUpEvent)
             {
                 if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)

@@ -1,4 +1,5 @@
 ﻿using System;
+using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
@@ -31,12 +32,12 @@ namespace H.Hooks
                 return IntPtr.Zero;
             }
 
-            var lParam = ToStructure<MouseLowLevelHookStruct>(lParamPtr);
+            var lParam = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParamPtr);
 
             //detect button clicked
-            MouseButtons button = MouseButtons.None;
+            var button = MouseButtons.None;
             short mouseDelta = 0;
-            int clickCount = 0;
+            var clickCount = 0;
             var mouseDown = false;
             var mouseUp = false;
             var mouseMove = false;
