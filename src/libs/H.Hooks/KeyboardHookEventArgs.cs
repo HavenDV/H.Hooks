@@ -7,12 +7,6 @@ namespace H.Hooks
 {
     public class KeyboardHookEventArgs
     {
-        #region PInvoke
-
-        private const int KeyPressed = 0x8000;
-
-        #endregion
-
         public Keys Key { get; }
         public bool Handled { get; set; }
 
@@ -33,7 +27,8 @@ namespace H.Hooks
         public bool IsRWinPressed { get; }
 
         private static bool Check(Keys key, VirtualKey virtualKey, Keys realKey) =>
-            Convert.ToBoolean(User32.GetKeyState(virtualKey) & KeyPressed) || key == realKey;
+            Convert.ToBoolean(User32.GetKeyState(virtualKey) & (int)KeyFlag.Up) || 
+            key == realKey;
 
         internal KeyboardHookEventArgs(KeyboardHookStruct lParam)
         {

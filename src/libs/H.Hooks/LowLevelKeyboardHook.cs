@@ -1,5 +1,4 @@
 ﻿using System;
-using H.Hooks.Core;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
