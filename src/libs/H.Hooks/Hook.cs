@@ -3,7 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Threading;
-using H.Hooks.Core.Interop;
+using H.Hooks.Core;
 using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
@@ -61,7 +61,7 @@ namespace H.Hooks
             Trace.WriteLine($"Starting hook '{Name}'...", $"Hook.StartHook [{Thread.CurrentThread.Name}]");
 
             HookAction = Callback;
-            var moduleHandle = Kernel32.GetModuleHandle(Process.GetCurrentProcess().MainModule.ModuleName);
+            var moduleHandle = Kernel32Methods.GetCurrentProcessModuleHandle();
 
             HookHandle = User32.SetWindowsHookEx(type, HookAction, moduleHandle, 0);
             if (HookHandle == null || HookHandle == IntPtr.Zero)
@@ -119,11 +119,13 @@ namespace H.Hooks
 
         #region IDisposable
 
-        /// <inheritdoc />
         /// <summary>
-        /// Dispose internal system hook resources
+        /// Dispose internal system hook resources.
         /// </summary>
-        public void Dispose() => Stop();
+        public void Dispose()
+        {
+            Stop();
+        }
 
         #endregion
     }
