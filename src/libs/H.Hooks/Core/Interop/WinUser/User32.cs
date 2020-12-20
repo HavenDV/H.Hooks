@@ -1,5 +1,4 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace H.Hooks.Core.Interop.WinUser
 {
@@ -14,7 +13,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// <param name="dwThreadId">The identifier of the thread with which the hook procedure is to be associated. If this parameter is zero, the hook procedure is associated with all existing threads running in the same desktop as the calling thread.</param>
         /// <returns>If the function succeeds, the return value is the handle to the hook procedure. If the function fails, the return value is NULL. To get extended error information, call GetLastError.</returns>
         [DllImport("user32.dll")]
-        public static extern IntPtr SetWindowsHookEx(HookProcedureType idHook, HookProc lpfn, IntPtr hMod, uint dwThreadId);
+        public static extern nint SetWindowsHookEx(HookProcedureType idHook, HookProc lpfn, nint hMod, uint dwThreadId);
 
         /// <summary>
         /// Removes a hook procedure installed in a hook chain by the SetWindowsHookEx function.
@@ -22,7 +21,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// <param name="hhk">A handle to the hook to be removed. This parameter is a hook handle obtained by a previous call to SetWindowsHookEx.</param>
         /// <returns>If the function succeeds, the return value is nonzero. If the function fails, the return value is zero. To get extended error information, call GetLastError.</returns>
         [DllImport("user32.dll")]
-        public static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        public static extern bool UnhookWindowsHookEx(nint hhk);
 
         /// <summary>
         /// Passes the hook information to the next hook procedure in the current hook chain. A hook procedure can call this function either before or after processing the hook information.
@@ -33,7 +32,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// <param name="lParam">The lParam value passed to the current hook procedure. The meaning of this parameter depends on the type of hook associated with the current hook chain.</param>
         /// <returns>This value is returned by the next hook procedure in the chain. The current hook procedure must also return this value. The meaning of the return value depends on the hook type. For more information, see the descriptions of the individual hook procedures.</returns>
         [DllImport("user32.dll")]
-        public static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, int wParam, IntPtr lParam);
+        public static extern nint CallNextHookEx(nint hhk, int nCode, int wParam, nint lParam);
 
         [DllImport("user32.dll")]
         public static extern short GetKeyState(VirtualKey key);

@@ -1,4 +1,3 @@
-using System;
 using H.Hooks.Core;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,7 +11,7 @@ namespace H.Hooks.UnitTests
         {
             var ptr = Kernel32Methods.GetCurrentProcessModuleHandle();
             
-            Assert.AreNotEqual(IntPtr.Zero, ptr);
+            Assert.AreNotEqual(0, ptr);
         }
     }
 }

@@ -14,7 +14,7 @@ namespace H.Hooks
 
         public bool IsStarted { get; private set; }
 
-        private IntPtr HookHandle { get; set; }
+        private nint HookHandle { get; set; }
 
         #endregion
 
@@ -34,13 +34,13 @@ namespace H.Hooks
 
         #region Protected methods
 
-        protected abstract IntPtr InternalCallback(int nCode, int wParam, IntPtr lParam);
+        protected abstract nint InternalCallback(int nCode, int wParam, nint lParam);
 
         #endregion
 
         #region Private methods
 
-        private IntPtr Callback(int nCode, int wParam, IntPtr lParam)
+        private nint Callback(int nCode, int wParam, nint lParam)
         {
             try
             {
@@ -50,7 +50,7 @@ namespace H.Hooks
             {
                 OnExceptionOccurred(exception);
 
-                return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
+                return User32.CallNextHookEx(0, nCode, wParam, lParam);
             }
         }
 

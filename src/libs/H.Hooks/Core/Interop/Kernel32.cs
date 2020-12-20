@@ -11,6 +11,6 @@ namespace H.Hooks.Core.Interop
         /// <param name="lpModuleName"></param>
         /// <returns></returns>
         [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern IntPtr GetModuleHandle(string? lpModuleName);
+        public static extern nint GetModuleHandle(string? lpModuleName);
     }
 }

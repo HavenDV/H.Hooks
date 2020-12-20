@@ -28,11 +28,11 @@ namespace H.Hooks
             Start(HookProcedureType.KeyboardLowLevel);
         }
 
-        protected override IntPtr InternalCallback(int code, int wParam, IntPtr lParamPtr)
+        protected override nint InternalCallback(int code, int wParam, nint lParamPtr)
         {
             if (code < 0)
             {
-                return IntPtr.Zero;
+                return 0;
             }
 
             var lParam = InteropUtilities.ToStructure<KeyboardHookStruct>(lParamPtr);
@@ -40,7 +40,7 @@ namespace H.Hooks
             {
                 if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)
                 {
-                    return IntPtr.Zero;
+                    return 0;
                 }
                 LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
             }
@@ -56,7 +56,7 @@ namespace H.Hooks
                 KeyUp?.Invoke(this, e);
             }
 
-            return e.Handled ? new IntPtr(-1) : IntPtr.Zero;
+            return e.Handled ? -1 : 0;
         }
 
         #endregion

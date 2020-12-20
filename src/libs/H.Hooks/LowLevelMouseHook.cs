@@ -25,11 +25,11 @@ namespace H.Hooks
             Start(HookProcedureType.MouseLowLevel);
         }
         
-        protected override IntPtr InternalCallback(int nCode, int wParam, IntPtr lParamPtr)
+        protected override nint InternalCallback(int nCode, int wParam, nint lParamPtr)
         {
             if (nCode < 0)
             {
-                return IntPtr.Zero;
+                return 0;
             }
 
             var lParam = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParamPtr);
@@ -167,7 +167,7 @@ namespace H.Hooks
                 //}
             }
 
-            return e.Handled ? new IntPtr(-1) : IntPtr.Zero;
+            return e.Handled ? -1 : 0;
         }
 
         #endregion

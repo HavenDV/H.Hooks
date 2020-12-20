@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.InteropServices;
 
 namespace H.Hooks.Core.Interop
@@ -12,9 +11,9 @@ namespace H.Hooks.Core.Interop
         /// <param name="ptr"></param>
         /// <exception cref="Win32Exception"></exception>
         /// <returns></returns>
-        public static IntPtr Check(this IntPtr ptr)
+        public static nint Check(this nint ptr)
         {
-            if (ptr == null || ptr == IntPtr.Zero)
+            if (ptr == 0)
             {
                 throw new Win32Exception(Marshal.GetLastWin32Error());
             }
@@ -28,7 +27,7 @@ namespace H.Hooks.Core.Interop
         /// <typeparam name="T"></typeparam>
         /// <param name="ptr"></param>
         /// <returns></returns>
-        public static T ToStructure<T>(IntPtr ptr) where T : struct
+        public static T ToStructure<T>(nint ptr) where T : struct
         {
             return (T)Marshal.PtrToStructure(ptr, typeof(T));
         }

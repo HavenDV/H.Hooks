@@ -12,7 +12,7 @@ namespace H.Hooks.Core
         /// </summary>
         /// <exception cref="Win32Exception"></exception>
         /// <returns></returns>
-        public static IntPtr GetCurrentProcessModuleHandle()
+        public static nint GetCurrentProcessModuleHandle()
         {
             return Kernel32.GetModuleHandle(null).Check();
         }
