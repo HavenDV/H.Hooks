@@ -28,11 +28,11 @@ namespace H.Hooks
 
         #region Protected methods
 
-        protected override int InternalCallback(int nCode, int wParam, IntPtr lParamPtr)
+        protected override IntPtr InternalCallback(int nCode, int wParam, IntPtr lParamPtr)
         {
             if (nCode < 0)
             {
-                return 0;
+                return IntPtr.Zero;
             }
 
             var lParam = ToStructure<MouseLowLevelHookStruct>(lParamPtr);
@@ -170,7 +170,7 @@ namespace H.Hooks
                 //}
             }
 
-            return e.Handled ? -1 : 0;
+            return e.Handled ? new IntPtr(-1) : IntPtr.Zero;
         }
 
         #endregion

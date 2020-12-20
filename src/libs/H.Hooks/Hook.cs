@@ -25,7 +25,15 @@ namespace H.Hooks
 
         #region Events
 
-        public event EventHandler<UnhandledExceptionEventArgs>? UnhandledException;
+        /// <summary>
+        /// 
+        /// </summary>
+        public event EventHandler<Exception>? ExceptionOccurred;
+
+        private void OnExceptionOccurred(Exception value)
+        {
+            ExceptionOccurred?.Invoke(this, value);
+        }
 
         #endregion
 
@@ -104,7 +112,7 @@ namespace H.Hooks
 
         #region Protected methods
 
-        protected abstract int InternalCallback(int nCode, int wParam, IntPtr lParam);
+        protected abstract IntPtr InternalCallback(int nCode, int wParam, IntPtr lParam);
 
         protected static T ToStructure<T>(IntPtr ptr) where T : struct => (T)Marshal.PtrToStructure(ptr, typeof(T));
 
@@ -112,20 +120,18 @@ namespace H.Hooks
 
         #region Private methods
 
-        private int Callback(int nCode, int wParam, IntPtr lParam)
+        private IntPtr Callback(int nCode, int wParam, IntPtr lParam)
         {
-            var result = 0;
-
             try
             {
-                result = InternalCallback(nCode, wParam, lParam);
+                return InternalCallback(nCode, wParam, lParam);
             }
             catch (Exception exception)
             {
-                UnhandledException?.Invoke(this, new UnhandledExceptionEventArgs(exception, false));
+                OnExceptionOccurred(exception);
+                
+                return User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
             }
-
-            return result < 0 ? result : User32.CallNextHookEx(IntPtr.Zero, nCode, wParam, lParam);
         }
 
         #endregion

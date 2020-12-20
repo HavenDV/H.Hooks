@@ -30,11 +30,11 @@ namespace H.Hooks
 
         #region Protected methods
 
-        protected override int InternalCallback(int code, int wParam, IntPtr lParamPtr)
+        protected override IntPtr InternalCallback(int code, int wParam, IntPtr lParamPtr)
         {
             if (code < 0)
             {
-                return 0;
+                return IntPtr.Zero;
             }
 
             var lParam = ToStructure<KeyboardHookStruct>(lParamPtr);
@@ -42,7 +42,7 @@ namespace H.Hooks
             {
                 if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)
                 {
-                    return 0;
+                    return IntPtr.Zero;
                 }
                 LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
             }
@@ -58,7 +58,7 @@ namespace H.Hooks
                 KeyUp?.Invoke(this, e);
             }
 
-            return e.Handled ? -1 : 0;
+            return e.Handled ? new IntPtr(-1) : IntPtr.Zero;
         }
 
         #endregion
