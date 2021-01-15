@@ -36,7 +36,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// </returns>
         [DllImport("user32.dll")]
         public static extern nint SetWindowsHookEx(
-            HookProcedureType idHook, 
+            int idHook, 
             HookProc lpfn, 
             nint hMod, 
             uint dwThreadId);

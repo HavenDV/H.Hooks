@@ -50,7 +50,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public LowLevelKeyboardHook() : base(HookProcedureType.KeyboardLowLevel)
+        public LowLevelKeyboardHook() : base(WH.KEYBOARD_LL)
         {
         }
 

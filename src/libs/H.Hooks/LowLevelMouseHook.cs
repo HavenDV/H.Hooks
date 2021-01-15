@@ -89,7 +89,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public LowLevelMouseHook() : base(HookProcedureType.MouseLowLevel)
+        public LowLevelMouseHook() : base(WH.MOUSE_LL)
         {
         }
 

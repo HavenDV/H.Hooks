@@ -30,7 +30,7 @@ namespace H.Hooks
         /// </summary>
         protected bool PushToThreadPool => !HandlingIsEnabled;
 
-        private HookProcedureType HookProcedureType { get; }
+        private int IdHook { get; }
         private Thread? Thread { get; set; }
         private uint Id { get; set; }
 
@@ -55,10 +55,10 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="type"></param>
-        protected internal Hook(HookProcedureType type)
+        /// <param name="idHook"></param>
+        protected internal Hook(int idHook)
         {
-            HookProcedureType = type;
+            IdHook = idHook;
         }
 
         #endregion
@@ -121,7 +121,7 @@ namespace H.Hooks
                     WM.QUIT, 
                     PM.NOREMOVE);
 
-                var handle = User32.SetWindowsHookEx(HookProcedureType, Callback, 0, 0).Check();
+                var handle = User32.SetWindowsHookEx(IdHook, Callback, 0, 0).Check();
 
                 while (true)
                 {
