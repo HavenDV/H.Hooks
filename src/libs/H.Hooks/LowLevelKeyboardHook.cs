@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
+using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
@@ -29,12 +29,12 @@ namespace H.Hooks
 
         private void OnKeyDown(KeyboardHookEventArgs value)
         {
-            KeyDown?.Invoke(this, value);
+            KeyDown?.Invoke(this, value, PushToThreadPool);
         }
 
         private void OnKeyUp(KeyboardHookEventArgs value)
         {
-            KeyUp?.Invoke(this, value);
+            KeyUp?.Invoke(this, value, PushToThreadPool);
         }
 
         #endregion
@@ -50,42 +50,32 @@ namespace H.Hooks
 
         #region Protected methods
 
-        protected override nint InternalCallback(int code, int wParam, nint lParamPtr)
+        protected override bool InternalCallback(int code, int wParam, nint lParamPtr)
         {
-            if (code < 0)
-            {
-                return 0;
-            }
-
             var lParam = InteropUtilities.ToStructure<KeyboardHookStruct>(lParamPtr);
             if (OneUpEvent)
             {
                 if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)
                 {
-                    return 0;
+                    return true;
                 }
                 LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
             }
 
             var args = new KeyboardHookEventArgs(lParam);
             var isKeyDown = lParam.Flags >> 7 == 0;
-
-            ThreadPool.QueueUserWorkItem(_ =>
+            if (isKeyDown)
             {
-                if (isKeyDown)
-                {
-                    OnKeyDown(args);
-                }
-                else
-                {
-                    OnKeyUp(args);
-                }
-            });
+                OnKeyDown(args);
+            }
+            else
+            {
+                OnKeyUp(args);
+            }
 
-            return args.Handled ? -1 : 0;
+            return args.Handled;
         }
 
         #endregion
-
     }
 }

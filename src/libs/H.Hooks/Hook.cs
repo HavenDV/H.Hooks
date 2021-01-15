@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
+using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
@@ -10,8 +11,18 @@ namespace H.Hooks
     {
         #region Properties
 
+        /// <summary>
+        /// If activated, you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
+        /// when handling events(After set up args.Handled = true).
+        /// </summary>
+        public bool HandlingIsEnabled { get; set; }
+
+        /// <summary>
+        /// Returns <see langword="true"/> if thread is started.
+        /// </summary>
         public bool IsStarted => Thread != null;
 
+        protected bool PushToThreadPool => !HandlingIsEnabled;
         private Thread? Thread { get; set; }
         private uint Id { get; set; }
 
@@ -26,14 +37,14 @@ namespace H.Hooks
 
         private void OnExceptionOccurred(Exception value)
         {
-            ExceptionOccurred?.Invoke(this, value);
+            ExceptionOccurred?.Invoke(this, value, PushToThreadPool);
         }
 
         #endregion
 
         #region Protected methods
 
-        protected abstract nint InternalCallback(int nCode, int wParam, nint lParam);
+        protected abstract bool InternalCallback(int nCode, int wParam, nint lParam);
 
         #endregion
 
@@ -43,14 +54,17 @@ namespace H.Hooks
         {
             try
             {
-                return InternalCallback(nCode, wParam, lParam);
+                if (nCode >= 0 && InternalCallback(nCode, wParam, lParam))
+                {
+                    return -1;
+                }
             }
             catch (Exception exception)
             {
                 OnExceptionOccurred(exception);
-
-                return User32.CallNextHookEx(0, nCode, wParam, lParam);
             }
+
+            return User32.CallNextHookEx(0, nCode, wParam, lParam);
         }
 
         #endregion

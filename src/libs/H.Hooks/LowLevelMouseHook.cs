@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
+using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
@@ -9,13 +9,75 @@ namespace H.Hooks
     {
         #region Events
 
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseUp;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseDown;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseClick;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseClickExt;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseDoubleClick;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseWheel;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<MouseEventExtArgs>? MouseMove;
+
+        private void OnMouseUp(MouseEventExtArgs value)
+        {
+            MouseUp?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseDown(MouseEventExtArgs value)
+        {
+            MouseDown?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseClick(MouseEventExtArgs value)
+        {
+            MouseClick?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseClickExt(MouseEventExtArgs value)
+        {
+            MouseClickExt?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseDoubleClick(MouseEventExtArgs value)
+        {
+            MouseDoubleClick?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseWheel(MouseEventExtArgs value)
+        {
+            MouseWheel?.Invoke(this, value, PushToThreadPool);
+        }
+
+        private void OnMouseMove(MouseEventExtArgs value)
+        {
+            MouseMove?.Invoke(this, value, PushToThreadPool);
+        }
 
         #endregion
 
@@ -26,13 +88,8 @@ namespace H.Hooks
             Start(HookProcedureType.MouseLowLevel);
         }
 
-        protected override nint InternalCallback(int nCode, int wParam, nint lParamPtr)
+        protected override bool InternalCallback(int nCode, int wParam, nint lParamPtr)
         {
-            if (nCode < 0)
-            {
-                return 0;
-            }
-
             var lParam = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParamPtr);
 
             //detect button clicked
@@ -113,65 +170,64 @@ namespace H.Hooks
             }
 
             //generate event 
-            var e = new MouseEventExtArgs(
+            var args = new MouseEventExtArgs(
                                                button,
                                                clickCount,
                                                lParam.Point.X,
                                                lParam.Point.Y,
                                                mouseDelta);
 
-            ThreadPool.QueueUserWorkItem(_ =>
+            //Mouse up
+            if (mouseUp)
             {
-                //Mouse up
-                if (mouseUp)
-                {
-                    MouseUp?.Invoke(null, e);
-                }
+                OnMouseUp(args);
+            }
 
-                //Mouse down
-                if (mouseDown)
-                {
-                    e.SpecialButton = lParam.MouseData > 0 ?
-                        (int)Math.Log(lParam.MouseData, 2) : 0;
-                    MouseDown?.Invoke(null, e);
-                }
+            //Mouse down
+            if (mouseDown)
+            {
+                args.SpecialButton = lParam.MouseData > 0
+                    ? (int)Math.Log(lParam.MouseData, 2)
+                    : 0;
 
-                //If someone listens to click and a click is heppened
-                if (clickCount > 0)
-                {
-                    MouseClick?.Invoke(null, e);
-                    MouseClickExt?.Invoke(null, e);
-                }
+                OnMouseDown(args);
+            }
 
-                //If someone listens to double click and a click is heppened
-                if (clickCount == 2)
-                {
-                    MouseDoubleClick?.Invoke(null, e);
-                }
+            //If someone listens to click and a click is heppened
+            if (clickCount > 0)
+            {
+                OnMouseClick(args);
+                OnMouseClickExt(args);
+            }
 
-                //Wheel was moved
-                if (mouseDelta != 0)
-                {
-                    MouseWheel?.Invoke(null, e);
-                }
+            //If someone listens to double click and a click is heppened
+            if (clickCount == 2)
+            {
+                OnMouseDoubleClick(args);
+            }
 
-                //If someone listens to move and there was a change in coordinates raise move event
-                //if (m_OldX != mouseHookStruct.Point.X || m_OldY != mouseHookStruct.Point.Y)
-                if (mouseMove)
-                {
-                    //m_OldX = mouseHookStruct.Point.X;
-                    //m_OldY = mouseHookStruct.Point.Y;
+            //Wheel was moved
+            if (mouseDelta != 0)
+            {
+                OnMouseWheel(args);
+            }
 
-                    MouseMove?.Invoke(null, e);
+            //If someone listens to move and there was a change in coordinates raise move event
+            //if (m_OldX != mouseHookStruct.Point.X || m_OldY != mouseHookStruct.Point.Y)
+            if (mouseMove)
+            {
+                //m_OldX = mouseHookStruct.Point.X;
+                //m_OldY = mouseHookStruct.Point.Y;
 
-                    //if (s_MouseMoveExt != null)
-                    //{
-                    //    s_MouseMoveExt.Invoke(null, e);
-                    //}
-                }
-            });
+                OnMouseMove(args);
 
-            return e.Handled ? -1 : 0;
+                //if (s_MouseMoveExt != null)
+                //{
+                //    s_MouseMoveExt.Invoke(null, e);
+                //}
+            }
+
+            return args.Handled;
         }
 
         #endregion
