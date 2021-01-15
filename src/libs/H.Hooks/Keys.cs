@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace H.Hooks
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class Keys
     {
         #region Static methods
@@ -23,6 +26,11 @@ namespace H.Hooks
                 .ToArray());
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public static Keys FromSpecialData(int data)
         {
             var number = data - 16;
@@ -34,20 +42,59 @@ namespace H.Hooks
 
         #region Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Key[] Values { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRightCtrl => Values.Contains(Key.RControlKey);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRightAlt => Values.Contains(Key.RMenu);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRightShift => Values.Contains(Key.RShiftKey);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLeftCtrl => Values.Contains(Key.LControlKey);
-        public bool IsLeftAlt => Values.Contains(Key.LMenu);
-        public bool IsLeftShift => Values.Contains(Key.LShiftKey);
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLeftAlt => Values.Contains(Key.LMenu);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLeftShift => Values.Contains(Key.LShiftKey);
+        
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsAlt => IsRightAlt || IsLeftAlt || Values.Contains(Key.Menu) || Values.Contains(Key.Alt);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsCtrl => IsLeftCtrl || IsRightCtrl || Values.Contains(Key.ControlKey) || Values.Contains(Key.Control);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsShift => IsRightShift || IsLeftShift || Values.Contains(Key.ShiftKey) || Values.Contains(Key.Shift);
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsEmpty => !Values.Any();
 
         #endregion
@@ -67,11 +114,20 @@ namespace H.Hooks
 
         #region Public methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Join("+", Values.Select(value => $"{value:G}"));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public override bool Equals(object obj)
         {
             if (obj is not Keys other)
@@ -89,6 +145,10 @@ namespace H.Hooks
                 Values.All(value => other.Values.Contains(value));
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override int GetHashCode()
         {
             unchecked

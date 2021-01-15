@@ -3,6 +3,9 @@ using System.Threading;
 
 namespace H.Hooks.Extensions
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class EventHandlerExtensions
     {
         /// <summary>

@@ -5,10 +5,16 @@ using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
-    public class LowLevelKeyboardHook : Hook
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class LowLevelKeyboardHook : Hook
     {
         #region Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool OneUpEvent { get; set; } = true;
 
         private Tuple<uint, uint>? LastState { get; set; }
@@ -41,6 +47,9 @@ namespace H.Hooks
 
         #region Constructors
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LowLevelKeyboardHook() : base(HookProcedureType.KeyboardLowLevel)
         {
         }
@@ -49,6 +58,13 @@ namespace H.Hooks
 
         #region Protected methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="code"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParamPtr"></param>
+        /// <returns></returns>
         protected override bool InternalCallback(int code, int wParam, nint lParamPtr)
         {
             var lParam = InteropUtilities.ToStructure<KeyboardHookStruct>(lParamPtr);

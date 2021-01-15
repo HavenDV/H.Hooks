@@ -5,7 +5,10 @@ using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
-    public class LowLevelMouseHook : Hook
+    /// <summary>
+    /// 
+    /// </summary>
+    public sealed class LowLevelMouseHook : Hook
     {
         #region Events
 
@@ -83,6 +86,9 @@ namespace H.Hooks
 
         #region Constructors
 
+        /// <summary>
+        /// 
+        /// </summary>
         public LowLevelMouseHook() : base(HookProcedureType.MouseLowLevel)
         {
         }
@@ -91,6 +97,13 @@ namespace H.Hooks
 
         #region Protected methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nCode"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParamPtr"></param>
+        /// <returns></returns>
         protected override bool InternalCallback(int nCode, int wParam, nint lParamPtr)
         {
             var lParam = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParamPtr);

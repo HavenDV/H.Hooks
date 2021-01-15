@@ -4,27 +4,81 @@ using H.Hooks.Core.Interop.WinUser;
 
 namespace H.Hooks
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public class KeyboardHookEventArgs
     {
         #region Properties
 
+        /// <summary>
+        /// 
+        /// </summary>
         public Key Key { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool Handled { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsAltPressed => IsLAltPressed || IsRAltPressed;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLAltPressed { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRAltPressed { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsCtrlPressed => IsLCtrlPressed || IsRCtrlPressed;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLCtrlPressed { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRCtrlPressed { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsShiftPressed => IsLShiftPressed || IsRShiftPressed;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLShiftPressed { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRShiftPressed { get; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsWinPressed => IsLWinPressed || IsRWinPressed;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsLWinPressed { get; }
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRWinPressed { get; }
 
         #endregion
@@ -65,6 +119,10 @@ namespace H.Hooks
                    Convert.ToBoolean(User32.GetKeyState((int)virtualKey) & (int) KeyFlag.Up);
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return $"Key={Key}; Win={IsWinPressed}; Alt={IsAltPressed}; Ctrl={IsCtrlPressed}; Shift={IsShiftPressed}";

@@ -1,7 +1,12 @@
 ﻿using System;
 
+#pragma warning disable CS1591
+
 namespace H.Hooks
 {
+    /// <summary>
+    /// 
+    /// </summary>
     [Flags]
     public enum Key
     {

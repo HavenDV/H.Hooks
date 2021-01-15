@@ -7,6 +7,9 @@ using H.Hooks.Extensions;
 
 namespace H.Hooks
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public abstract class Hook : IDisposable
     {
         #region Properties
@@ -22,8 +25,12 @@ namespace H.Hooks
         /// </summary>
         public bool IsStarted => Thread != null;
 
-        private HookProcedureType HookProcedureType { get; }
+        /// <summary>
+        /// 
+        /// </summary>
         protected bool PushToThreadPool => !HandlingIsEnabled;
+
+        private HookProcedureType HookProcedureType { get; }
         private Thread? Thread { get; set; }
         private uint Id { get; set; }
 
@@ -43,8 +50,28 @@ namespace H.Hooks
 
         #endregion
 
+        #region Constructors
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="type"></param>
+        protected internal Hook(HookProcedureType type)
+        {
+            HookProcedureType = type;
+        }
+
+        #endregion
+
         #region Protected methods
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="nCode"></param>
+        /// <param name="wParam"></param>
+        /// <param name="lParam"></param>
+        /// <returns></returns>
         protected abstract bool InternalCallback(int nCode, int wParam, nint lParam);
 
         #endregion
@@ -66,15 +93,6 @@ namespace H.Hooks
             }
 
             return User32.CallNextHookEx(0, nCode, wParam, lParam);
-        }
-
-        #endregion
-
-        #region Constructors
-
-        protected Hook(HookProcedureType type)
-        {
-            HookProcedureType = type;
         }
 
         #endregion

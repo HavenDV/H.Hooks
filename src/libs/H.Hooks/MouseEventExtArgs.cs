@@ -11,6 +11,9 @@
         /// </summary>
         public bool Handled { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
         public int SpecialButton { get; set; }
 
         /// <summary>
