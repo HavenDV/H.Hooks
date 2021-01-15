@@ -62,7 +62,7 @@ namespace H.Hooks
         private static bool Check(Key key, VirtualKey virtualKey, Key realKey)
         {
             return key == realKey ||
-                   Convert.ToBoolean(User32.GetKeyState(virtualKey) & (int) KeyFlag.Up);
+                   Convert.ToBoolean(User32.GetKeyState((int)virtualKey) & (int) KeyFlag.Up);
         }
 
         public override string ToString()

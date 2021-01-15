@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
@@ -24,7 +25,7 @@ namespace H.Hooks
         {
             Start(HookProcedureType.MouseLowLevel);
         }
-        
+
         protected override nint InternalCallback(int nCode, int wParam, nint lParamPtr)
         {
             if (nCode < 0)
@@ -119,53 +120,56 @@ namespace H.Hooks
                                                lParam.Point.Y,
                                                mouseDelta);
 
-            //Mouse up
-            if (mouseUp)
+            ThreadPool.QueueUserWorkItem(_ =>
             {
-                MouseUp?.Invoke(null, e);
-            }
+                //Mouse up
+                if (mouseUp)
+                {
+                    MouseUp?.Invoke(null, e);
+                }
 
-            //Mouse down
-            if (mouseDown)
-            {
-                e.SpecialButton = lParam.MouseData > 0 ?
-                    (int)Math.Log(lParam.MouseData, 2) : 0;
-                MouseDown?.Invoke(null, e);
-            }
+                //Mouse down
+                if (mouseDown)
+                {
+                    e.SpecialButton = lParam.MouseData > 0 ?
+                        (int)Math.Log(lParam.MouseData, 2) : 0;
+                    MouseDown?.Invoke(null, e);
+                }
 
-            //If someone listens to click and a click is heppened
-            if (clickCount > 0)
-            {
-                MouseClick?.Invoke(null, e);
-                MouseClickExt?.Invoke(null, e);
-            }
+                //If someone listens to click and a click is heppened
+                if (clickCount > 0)
+                {
+                    MouseClick?.Invoke(null, e);
+                    MouseClickExt?.Invoke(null, e);
+                }
 
-            //If someone listens to double click and a click is heppened
-            if (clickCount == 2)
-            {
-                MouseDoubleClick?.Invoke(null, e);
-            }
+                //If someone listens to double click and a click is heppened
+                if (clickCount == 2)
+                {
+                    MouseDoubleClick?.Invoke(null, e);
+                }
 
-            //Wheel was moved
-            if (mouseDelta != 0)
-            {
-                MouseWheel?.Invoke(null, e);
-            }
-            
-            //If someone listens to move and there was a change in coordinates raise move event
-            //if (m_OldX != mouseHookStruct.Point.X || m_OldY != mouseHookStruct.Point.Y)
-            if (mouseMove)
-            {
-                //m_OldX = mouseHookStruct.Point.X;
-                //m_OldY = mouseHookStruct.Point.Y;
-                
-                MouseMove?.Invoke(null, e);
+                //Wheel was moved
+                if (mouseDelta != 0)
+                {
+                    MouseWheel?.Invoke(null, e);
+                }
 
-                //if (s_MouseMoveExt != null)
-                //{
-                //    s_MouseMoveExt.Invoke(null, e);
-                //}
-            }
+                //If someone listens to move and there was a change in coordinates raise move event
+                //if (m_OldX != mouseHookStruct.Point.X || m_OldY != mouseHookStruct.Point.Y)
+                if (mouseMove)
+                {
+                    //m_OldX = mouseHookStruct.Point.X;
+                    //m_OldY = mouseHookStruct.Point.Y;
+
+                    MouseMove?.Invoke(null, e);
+
+                    //if (s_MouseMoveExt != null)
+                    //{
+                    //    s_MouseMoveExt.Invoke(null, e);
+                    //}
+                }
+            });
 
             return e.Handled ? -1 : 0;
         }

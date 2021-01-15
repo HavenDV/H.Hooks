@@ -5,7 +5,8 @@
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Description></Description>
+    <Description>Contains LowLevelKeyboardHook and LowLevelMouseHook.</Description>
+    <PackageTags>hooks, low-level, SetWindowsHookEx</PackageTags>
   </PropertyGroup>
 
 </Project>

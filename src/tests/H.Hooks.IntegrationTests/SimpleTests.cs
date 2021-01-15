@@ -11,7 +11,7 @@ namespace H.Hooks.IntegrationTests
         [TestMethod]
         public async Task LowLevelKeyboardHookTest()
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var cancellationToken = cancellationTokenSource.Token;
 
             using var hook = new LowLevelKeyboardHook();

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
@@ -68,14 +69,18 @@ namespace H.Hooks
 
             var args = new KeyboardHookEventArgs(lParam);
             var isKeyDown = lParam.Flags >> 7 == 0;
-            if (isKeyDown)
+
+            ThreadPool.QueueUserWorkItem(_ =>
             {
-                OnKeyDown(args);
-            }
-            else
-            {
-                OnKeyUp(args);
-            }
+                if (isKeyDown)
+                {
+                    OnKeyDown(args);
+                }
+                else
+                {
+                    OnKeyUp(args);
+                }
+            });
 
             return args.Handled ? -1 : 0;
         }

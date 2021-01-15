@@ -1,6 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
-using H.Hooks.Core;
+using System.Threading;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 
@@ -10,9 +10,10 @@ namespace H.Hooks
     {
         #region Properties
 
-        public bool IsStarted { get; private set; }
+        public bool IsStarted => Thread != null;
 
-        private nint HookHandle { get; set; }
+        private Thread? Thread { get; set; }
+        private uint Id { get; set; }
 
         #endregion
 
@@ -62,33 +63,63 @@ namespace H.Hooks
         /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
         internal void Start(HookProcedureType type)
         {
-            if (IsStarted)
+            if (Thread != null)
             {
                 return;
             }
 
-            var moduleHandle = Kernel32Methods.GetCurrentProcessModuleHandle();
+            Thread = new Thread(() =>
+            {
+                Id = Kernel32.GetCurrentThreadId();
 
-            HookHandle = User32.SetWindowsHookEx(type, Callback, moduleHandle, 0).Check();
+                User32.PeekMessage(
+                    out _, 
+                    -1, 
+                    WindowsMessages.WM_QUIT, 
+                    WindowsMessages.WM_QUIT, 
+                    PM.NOREMOVE);
 
-            IsStarted = true;
+                var handle = User32.SetWindowsHookEx(type, Callback, 0, 0).Check();
+
+                while (true)
+                {
+                    var result = User32.GetMessage(
+                        out var msg, 
+                        -1,
+                        WindowsMessages.WM_QUIT,
+                        WindowsMessages.WM_QUIT);
+                    if (result != 0 || 
+                        msg.msg == WindowsMessages.WM_QUIT)
+                    {
+                        break;
+                    }
+
+                    User32.DefWindowProc(msg.handle, msg.msg, msg.wParam, msg.lParam);
+                }
+
+                User32.UnhookWindowsHookEx(handle);
+            })
+            {
+                IsBackground = true,
+            };
+            Thread.Start();
         }
 
         /// <summary>
-        /// Stop hook process
+        /// Stops hook thread.
         /// </summary>
         public void Stop()
         {
-            if (!IsStarted)
+            if (Thread == null)
             {
                 return;
             }
 
-            User32.UnhookWindowsHookEx(HookHandle);
-
-            IsStarted = false;
+            User32.PostThreadMessage(Id, WindowsMessages.WM_QUIT, 0, 0);
+            Thread?.Join();
+            Thread = null;
         }
-        
+
         /// <summary>
         /// Dispose internal system hook resources.
         /// </summary>

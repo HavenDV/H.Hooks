@@ -1,16 +1,18 @@
-﻿using System;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace H.Hooks.Core.Interop
 {
     internal static class Kernel32
     {
         /// <summary>
-        /// If this parameter is NULL, GetModuleHandle returns a handle to the file used to create the calling process (.exe file).
+        /// Retrieves the thread identifier of the calling thread.
         /// </summary>
-        /// <param name="lpModuleName"></param>
-        /// <returns></returns>
-        [DllImport("kernel32.dll", CharSet = CharSet.Auto, SetLastError = true)]
-        public static extern nint GetModuleHandle(string? lpModuleName);
+        /// <returns>The return value is the thread identifier of the calling thread.</returns>
+        /// <remarks>
+        /// Until the thread terminates, the thread identifier uniquely identifies
+        /// the thread throughout the system.
+        /// </remarks>
+        [DllImport("kernel32.dll")]
+        public static extern uint GetCurrentThreadId();
     }
 }

@@ -102,5 +102,10 @@ namespace H.Hooks.Core.Interop.WinUser
         /// these two contexts by checking the context code in the lParam parameter. 
         /// </summary>
         public const int WM_SYSKEYUP = 0x105;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public const int WM_QUIT = 0x0012;
     }
 }
