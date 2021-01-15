@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using H.Hooks.Core.Interop;
 
 namespace H.Hooks.Core

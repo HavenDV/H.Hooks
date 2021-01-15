@@ -16,8 +16,25 @@ namespace H.Hooks
 
         #region Events
 
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<KeyboardHookEventArgs>? KeyDown;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public event EventHandler<KeyboardHookEventArgs>? KeyUp;
+
+        private void OnKeyDown(KeyboardHookEventArgs value)
+        {
+            KeyDown?.Invoke(this, value);
+        }
+
+        private void OnKeyUp(KeyboardHookEventArgs value)
+        {
+            KeyUp?.Invoke(this, value);
+        }
 
         #endregion
 
@@ -45,18 +62,18 @@ namespace H.Hooks
                 LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
             }
 
+            var args = new KeyboardHookEventArgs(lParam);
             var isKeyDown = lParam.Flags >> 7 == 0;
-            var e = new KeyboardHookEventArgs(lParam);
             if (isKeyDown)
             {
-                KeyDown?.Invoke(this, e);
+                OnKeyDown(args);
             }
             else
             {
-                KeyUp?.Invoke(this, e);
+                OnKeyUp(args);
             }
 
-            return e.Handled ? -1 : 0;
+            return args.Handled ? -1 : 0;
         }
 
         #endregion
