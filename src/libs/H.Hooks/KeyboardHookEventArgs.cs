@@ -7,7 +7,7 @@ namespace H.Hooks
     /// <summary>
     /// 
     /// </summary>
-    public class KeyboardHookEventArgs
+    public class KeyboardHookEventArgs : EventArgs
     {
         #region Properties
 

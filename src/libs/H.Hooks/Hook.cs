@@ -168,6 +168,7 @@ namespace H.Hooks
         public void Dispose()
         {
             Stop();
+            GC.SuppressFinalize(this);
         }
 
         #endregion

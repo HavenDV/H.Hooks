@@ -8,11 +8,11 @@ namespace H.Hooks
     public class MouseEventArgs : EventArgs
     {
         /// <summary>Gets which mouse button was pressed.</summary>
-        /// <returns>One of the <see cref="T:System.Windows.Forms.MouseButtons" /> values.</returns>
+        /// <returns>One of the <see cref="MouseButtons" /> values.</returns>
         public MouseButtons Button { get; }
 
         /// <summary>Gets the number of times the mouse button was pressed and released.</summary>
-        /// <returns>An <see cref="T:System.Int32" /> that contains the number of times the mouse button was pressed and released.</returns>
+        /// <returns>An <see cref="int" /> that contains the number of times the mouse button was pressed and released.</returns>
         public int Clicks { get; }
 
         /// <summary>Gets the x-coordinate of the mouse during the generating mouse event.</summary>
@@ -27,8 +27,8 @@ namespace H.Hooks
         /// <returns>A signed count of the number of detents the mouse wheel has rotated, multiplied by the WHEEL_DELTA constant.</returns>
         public int Delta { get; }
 
-        /// <summary>Initializes a new instance of the <see cref="T:System.Windows.Forms.MouseEventArgs" /> class.</summary>
-        /// <param name="button">One of the <see cref="T:System.Windows.Forms.MouseButtons" /> values that indicate which mouse button was pressed. </param>
+        /// <summary>Initializes a new instance of the <see cref="MouseEventArgs" /> class.</summary>
+        /// <param name="button">One of the <see cref="MouseButtons" /> values that indicate which mouse button was pressed. </param>
         /// <param name="clicks">The number of times a mouse button was pressed. </param>
         /// <param name="x">The x-coordinate of a mouse click, in pixels. </param>
         /// <param name="y">The y-coordinate of a mouse click, in pixels. </param>

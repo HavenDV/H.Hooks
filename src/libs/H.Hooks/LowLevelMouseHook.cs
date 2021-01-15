@@ -102,11 +102,11 @@ namespace H.Hooks
         /// </summary>
         /// <param name="nCode"></param>
         /// <param name="wParam"></param>
-        /// <param name="lParamPtr"></param>
+        /// <param name="lParam"></param>
         /// <returns></returns>
-        protected override bool InternalCallback(int nCode, int wParam, nint lParamPtr)
+        protected override bool InternalCallback(int nCode, int wParam, nint lParam)
         {
-            var lParam = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParamPtr);
+            var value = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParam);
 
             //detect button clicked
             var button = MouseButtons.None;
@@ -167,7 +167,7 @@ namespace H.Hooks
                     //If the message is WM_MOUSEWHEEL, the high-order word of MouseData member is the wheel delta. 
                     //One wheel click is defined as WHEEL_DELTA, which is 120. 
                     //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
-                    mouseDelta = (short)((lParam.MouseData >> 16) & 0xffff);
+                    mouseDelta = (short)((value.MouseData >> 16) & 0xffff);
 
                     //TODO: X BUTTONS (I havent them so was unable to test)
                     //If the message is WM_XBUTTONDOWN, WM_XBUTTONUP, WM_XBUTTONDBLCLK, WM_NCXBUTTONDOWN, WM_NCXBUTTONUP, 
@@ -187,11 +187,11 @@ namespace H.Hooks
 
             //generate event 
             var args = new MouseEventExtArgs(
-                                               button,
-                                               clickCount,
-                                               lParam.Point.X,
-                                               lParam.Point.Y,
-                                               mouseDelta);
+                button,
+                clickCount,
+                value.Point.X,
+                value.Point.Y,
+                mouseDelta);
 
             //Mouse up
             if (mouseUp)
@@ -202,8 +202,8 @@ namespace H.Hooks
             //Mouse down
             if (mouseDown)
             {
-                args.SpecialButton = lParam.MouseData > 0
-                    ? (int)Math.Log(lParam.MouseData, 2)
+                args.SpecialButton = value.MouseData > 0
+                    ? (int)Math.Log(value.MouseData, 2)
                     : 0;
 
                 OnMouseDown(args);

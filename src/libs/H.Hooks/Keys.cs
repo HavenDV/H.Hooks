@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace H.Hooks
@@ -45,7 +46,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public Key[] Values { get; }
+        public IReadOnlyCollection<Key> Values { get; }
 
         /// <summary>
         /// 
@@ -141,7 +142,7 @@ namespace H.Hooks
         private bool Equals(Keys other)
         {
             return 
-                Values.Length == other.Values.Length &&
+                Values.Count == other.Values.Count &&
                 Values.All(value => other.Values.Contains(value));
         }
 

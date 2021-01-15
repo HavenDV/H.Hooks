@@ -61,24 +61,24 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="code"></param>
+        /// <param name="nCode"></param>
         /// <param name="wParam"></param>
-        /// <param name="lParamPtr"></param>
+        /// <param name="lParam"></param>
         /// <returns></returns>
-        protected override bool InternalCallback(int code, int wParam, nint lParamPtr)
+        protected override bool InternalCallback(int nCode, int wParam, nint lParam)
         {
-            var lParam = InteropUtilities.ToStructure<KeyboardHookStruct>(lParamPtr);
+            var value = InteropUtilities.ToStructure<KeyboardHookStruct>(lParam);
             if (OneUpEvent)
             {
-                if (LastState != null && LastState.Item1 == lParam.VirtualKeyCode && LastState.Item2 == lParam.Flags)
+                if (LastState != null && LastState.Item1 == value.VirtualKeyCode && LastState.Item2 == value.Flags)
                 {
                     return true;
                 }
-                LastState = new Tuple<uint, uint>(lParam.VirtualKeyCode, lParam.Flags);
+                LastState = new Tuple<uint, uint>(value.VirtualKeyCode, value.Flags);
             }
 
-            var args = new KeyboardHookEventArgs(lParam);
-            var isKeyDown = lParam.Flags >> 7 == 0;
+            var args = new KeyboardHookEventArgs(value);
+            var isKeyDown = value.Flags >> 7 == 0;
             if (isKeyDown)
             {
                 OnKeyDown(args);
