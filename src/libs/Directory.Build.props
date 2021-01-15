@@ -3,9 +3,9 @@
   <Import Project="..\Directory.Build.props" />
 
   <PropertyGroup Label="Nuget">
-    <Version>1.0.1</Version>
+    <Version>1.1.0</Version>
     <PackageReleaseNotes>
-Initial release.
+feat: Changed Hook.Start to use separate thread.
     </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
