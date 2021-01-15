@@ -5,7 +5,7 @@
     /// Values from Winuser.h in Microsoft SDK. <br/>
     /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h#L765
     /// </summary>
-    internal enum HookProcedureType
+    public enum HookProcedureType
     {
         /// <summary>
         /// Installs a hook procedure that monitors keystroke messages. For more information, see the KeyboardProc hook procedure. 

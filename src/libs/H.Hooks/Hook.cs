@@ -22,6 +22,7 @@ namespace H.Hooks
         /// </summary>
         public bool IsStarted => Thread != null;
 
+        private HookProcedureType HookProcedureType { get; }
         protected bool PushToThreadPool => !HandlingIsEnabled;
         private Thread? Thread { get; set; }
         private uint Id { get; set; }
@@ -69,13 +70,22 @@ namespace H.Hooks
 
         #endregion
 
+        #region Constructors
+
+        protected Hook(HookProcedureType type)
+        {
+            HookProcedureType = type;
+        }
+
+        #endregion
+
         #region Public methods
 
         /// <summary>
-        /// Starts hook process.
+        /// Starts hook thread.
         /// </summary>
         /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
-        internal void Start(HookProcedureType type)
+        public void Start()
         {
             if (Thread != null)
             {
@@ -93,7 +103,7 @@ namespace H.Hooks
                     WM.QUIT, 
                     PM.NOREMOVE);
 
-                var handle = User32.SetWindowsHookEx(type, Callback, 0, 0).Check();
+                var handle = User32.SetWindowsHookEx(HookProcedureType, Callback, 0, 0).Check();
 
                 while (true)
                 {

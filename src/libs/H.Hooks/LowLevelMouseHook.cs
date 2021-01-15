@@ -81,12 +81,15 @@ namespace H.Hooks
 
         #endregion
 
-        #region Protected methods
+        #region Constructors
 
-        public void Start()
+        public LowLevelMouseHook() : base(HookProcedureType.MouseLowLevel)
         {
-            Start(HookProcedureType.MouseLowLevel);
         }
+
+        #endregion
+
+        #region Protected methods
 
         protected override bool InternalCallback(int nCode, int wParam, nint lParamPtr)
         {

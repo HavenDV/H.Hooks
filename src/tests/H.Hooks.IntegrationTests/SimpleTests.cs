@@ -19,7 +19,7 @@ namespace H.Hooks.IntegrationTests
             hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
 
             hook.Start();
-
+            
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
         }
 
@@ -28,11 +28,13 @@ namespace H.Hooks.IntegrationTests
         {
             using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var cancellationToken = cancellationTokenSource.Token;
-
+            
             using var hook = new LowLevelKeyboardHook
             {
                 HandlingIsEnabled = true,
             };
+            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
+            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
             hook.KeyUp += (_, args) => args.Handled = true;
             hook.KeyDown += (_, args) => args.Handled = true;
             

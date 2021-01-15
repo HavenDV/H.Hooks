@@ -39,11 +39,10 @@ namespace H.Hooks
 
         #endregion
 
-        #region Public methods
+        #region Constructors
 
-        public void Start()
+        public LowLevelKeyboardHook() : base(HookProcedureType.KeyboardLowLevel)
         {
-            Start(HookProcedureType.KeyboardLowLevel);
         }
 
         #endregion
