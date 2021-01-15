@@ -102,52 +102,52 @@ namespace H.Hooks
 
             switch (wParam)
             {
-                case WindowsMessages.WM_LBUTTONDOWN:
+                case WM.LBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.Left;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_LBUTTONUP:
+                case WM.LBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.Left;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_LBUTTONDBLCLK:
+                case WM.LBUTTONDBLCLK:
                     button = MouseButtons.Left;
                     clickCount = 2;
                     break;
-                case WindowsMessages.WM_RBUTTONDOWN:
+                case WM.RBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.Right;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_RBUTTONUP:
+                case WM.RBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.Right;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_RBUTTONDBLCLK:
+                case WM.RBUTTONDBLCLK:
                     button = MouseButtons.Right;
                     clickCount = 2;
                     break;
-                case WindowsMessages.WM_XBUTTONDOWN:
-                case WindowsMessages.WM_NCXBUTTONDOWN:
+                case WM.XBUTTONDOWN:
+                case WM.NCXBUTTONDOWN:
                     mouseDown = true;
                     button = MouseButtons.XButton1;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_XBUTTONUP:
-                case WindowsMessages.WM_NCXBUTTONUP:
+                case WM.XBUTTONUP:
+                case WM.NCXBUTTONUP:
                     mouseUp = true;
                     button = MouseButtons.XButton1;
                     clickCount = 1;
                     break;
-                case WindowsMessages.WM_XBUTTONDBLCLK:
-                case WindowsMessages.WM_NCXBUTTONDBLCLK:
+                case WM.XBUTTONDBLCLK:
+                case WM.NCXBUTTONDBLCLK:
                     button = MouseButtons.XButton1;
                     clickCount = 2;
                     break;
-                case WindowsMessages.WM_MOUSEWHEEL:
+                case WM.MOUSEWHEEL:
                     //If the message is WM_MOUSEWHEEL, the high-order word of MouseData member is the wheel delta. 
                     //One wheel click is defined as WHEEL_DELTA, which is 120. 
                     //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
@@ -160,7 +160,7 @@ namespace H.Hooks
                     //Otherwise, MouseData is not used. 
                     break;
 
-                case WindowsMessages.WM_MOUSEMOVE:
+                case WM.MOUSEMOVE:
                     mouseMove = true;
                     break;
 

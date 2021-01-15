@@ -89,8 +89,8 @@ namespace H.Hooks
                 User32.PeekMessage(
                     out _, 
                     -1, 
-                    WindowsMessages.WM_QUIT, 
-                    WindowsMessages.WM_QUIT, 
+                    WM.QUIT,
+                    WM.QUIT, 
                     PM.NOREMOVE);
 
                 var handle = User32.SetWindowsHookEx(type, Callback, 0, 0).Check();
@@ -100,10 +100,10 @@ namespace H.Hooks
                     var result = User32.GetMessage(
                         out var msg, 
                         -1,
-                        WindowsMessages.WM_QUIT,
-                        WindowsMessages.WM_QUIT);
+                        WM.QUIT,
+                        WM.QUIT);
                     if (result != 0 || 
-                        msg.msg == WindowsMessages.WM_QUIT)
+                        msg.msg == WM.QUIT)
                     {
                         break;
                     }
@@ -129,7 +129,7 @@ namespace H.Hooks
                 return;
             }
 
-            User32.PostThreadMessage(Id, WindowsMessages.WM_QUIT, 0, 0);
+            User32.PostThreadMessage(Id, WM.QUIT, 0, 0);
             Thread?.Join();
             Thread = null;
         }
