@@ -38,12 +38,16 @@ namespace H.Hooks
 
         #endregion
 
-        #region Protected methods
+        #region Public methods
 
         public void Start()
         {
             Start(HookProcedureType.KeyboardLowLevel);
         }
+
+        #endregion
+
+        #region Protected methods
 
         protected override nint InternalCallback(int code, int wParam, nint lParamPtr)
         {

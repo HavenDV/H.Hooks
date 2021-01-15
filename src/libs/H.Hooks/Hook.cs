@@ -8,8 +8,6 @@ namespace H.Hooks
 {
     public abstract class Hook : IDisposable
     {
-        public static Keys FromString(string text) => Enum.TryParse<Keys>(text, true, out var result) ? result : Keys.None;
-
         #region Properties
 
         public bool IsStarted { get; private set; }

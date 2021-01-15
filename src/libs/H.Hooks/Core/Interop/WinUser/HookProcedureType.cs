@@ -3,7 +3,7 @@
     /// <summary>
     /// WH_ prefix SetWindowsHook() codes. <br/>
     /// Values from Winuser.h in Microsoft SDK. <br/>
-    /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h
+    /// https://github.com/tpn/winsdk-10/blob/master/Include/10.0.10240.0/um/WinUser.h#L765
     /// </summary>
     internal enum HookProcedureType
     {
