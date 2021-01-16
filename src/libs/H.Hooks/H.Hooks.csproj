@@ -1,12 +1,17 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;net4.5</TargetFrameworks>
   </PropertyGroup>
 
   <PropertyGroup Label="NuGet">
-    <Description>Contains LowLevelKeyboardHook and LowLevelMouseHook.</Description>
-    <PackageTags>hooks, low-level, SetWindowsHookEx</PackageTags>
+    <Description>Contains LowLevelKeyboardHook and LowLevelMouseHook. Features:
+ - Global key handling and cancellation
+ - Allows handling combination like 1 + 2 + 3
+ - Only one Up event per combination
+ - Handle special buttons like Mouse.XButton
+    </Description>
+    <PackageTags>hooks, low-level, SetWindowsHookEx, global, keyboard, events, clicks, keys</PackageTags>
   </PropertyGroup>
 
 </Project>

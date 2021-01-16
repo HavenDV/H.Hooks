@@ -51,47 +51,47 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public bool IsRightCtrl => Values.Contains(Key.RControlKey);
+        public bool IsRightCtrl => Values.Contains(Key.RControl);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsRightAlt => Values.Contains(Key.RMenu);
+        public bool IsRightAlt => Values.Contains(Key.RAlt);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsRightShift => Values.Contains(Key.RShiftKey);
+        public bool IsRightShift => Values.Contains(Key.RShift);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsLeftCtrl => Values.Contains(Key.LControlKey);
+        public bool IsLeftCtrl => Values.Contains(Key.LControl);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsLeftAlt => Values.Contains(Key.LMenu);
+        public bool IsLeftAlt => Values.Contains(Key.LAlt);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsLeftShift => Values.Contains(Key.LShiftKey);
+        public bool IsLeftShift => Values.Contains(Key.LShift);
         
         /// <summary>
         /// 
         /// </summary>
-        public bool IsAlt => IsRightAlt || IsLeftAlt || Values.Contains(Key.Menu) || Values.Contains(Key.Alt);
+        public bool IsAlt => IsRightAlt || IsLeftAlt || Values.Contains(Key.Alt);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsCtrl => IsLeftCtrl || IsRightCtrl || Values.Contains(Key.ControlKey) || Values.Contains(Key.Control);
+        public bool IsCtrl => IsLeftCtrl || IsRightCtrl || Values.Contains(Key.Control);
 
         /// <summary>
         /// 
         /// </summary>
-        public bool IsShift => IsRightShift || IsLeftShift || Values.Contains(Key.ShiftKey) || Values.Contains(Key.Shift);
+        public bool IsShift => IsRightShift || IsLeftShift || Values.Contains(Key.Shift);
 
         /// <summary>
         /// 
@@ -121,7 +121,7 @@ namespace H.Hooks
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join("+", Values.Select(value => $"{value:G}"));
+            return string.Join("+", Values.Select(value => $"{value.ToFixedString()}"));
         }
 
         /// <summary>

@@ -18,7 +18,7 @@ namespace H.Hooks
         /// If activated, you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
         /// when handling events(After set up args.Handled = true).
         /// </summary>
-        public bool HandlingIsEnabled { get; set; }
+        public bool Handling { get; set; }
 
         /// <summary>
         /// Returns <see langword="true"/> if thread is started.

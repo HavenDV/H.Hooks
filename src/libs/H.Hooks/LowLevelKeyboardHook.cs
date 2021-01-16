@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 using H.Hooks.Extensions;
@@ -16,6 +18,21 @@ namespace H.Hooks
         /// 
         /// </summary>
         public bool OneUpEvent { get; set; } = true;
+
+        /// <summary>
+        /// Allows common key combinations, like 1 + 2 + 3.
+        /// </summary>
+        public bool IsExtendedMode { get; set; }
+
+        /// <summary>
+        /// Allows handle modifier keys.
+        /// </summary>
+        public bool HandleModifierKeys { get; set; }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsLeftRightGranularity { get; set; }
 
         private Tuple<uint, uint>? LastState { get; set; }
 
@@ -77,7 +94,43 @@ namespace H.Hooks
                 LastState = new Tuple<uint, uint>(value.VirtualKeyCode, value.Flags);
             }
 
-            var args = new KeyboardHookEventArgs(value);
+            var keys = new List<Key>();
+            var mainKey = (Key)value.VirtualKeyCode;
+            keys.Add(mainKey);
+
+            CheckAndAdd(keys, Key.LAlt);
+            CheckAndAdd(keys, Key.RAlt);
+
+            CheckAndAdd(keys, Key.LCtrl);
+            CheckAndAdd(keys, Key.RCtrl);
+
+            CheckAndAdd(keys, Key.LShift);
+            CheckAndAdd(keys, Key.RShift);
+
+            CheckAndAdd(keys, Key.LWin);
+            CheckAndAdd(keys, Key.RWin);
+
+            if (IsExtendedMode)
+            {
+                //User32.GetKeyState((int) Key.ShiftKey);
+                //var buffer = new byte[256];
+                //User32.GetKeyboardState(buffer);
+                //keys.AddRange(buffer
+                //    .Select((@byte, index) => (@byte, index))
+                //    .Where(pair => (pair.@byte & (int)KeyFlag.Up) > 0)
+                //    .Select(pair => (Key)pair.index));
+
+                for (var key = Key.D0; key <= Key.D9; key++)
+                {
+                    CheckAndAdd(keys, key);
+                }
+                for (var key = Key.A; key <= Key.Z; key++)
+                {
+                    CheckAndAdd(keys, key);
+                }
+            }
+
+            var args = new KeyboardHookEventArgs(keys.ToArray());
             var isKeyDown = value.Flags >> 7 == 0;
             if (isKeyDown)
             {
@@ -88,7 +141,32 @@ namespace H.Hooks
                 OnKeyUp(args);
             }
 
-            return args.Handled;
+            // Disabling handling for modifier keys.
+            // If you handle separate modifier keys, you can't handle combinations.
+            if (!HandleModifierKeys &&
+                keys.All(key => new[]
+                {
+                    Key.LControl, Key.LWin, Key.LAlt, Key.LShift,
+                    Key.RControl, Key.RWin, Key.RAlt, Key.RShift,
+                }.Contains(key)))
+            {
+                return false;
+            }
+
+            return args.IsHandled;
+        }
+
+        private static void CheckAndAdd(ICollection<Key> keys, Key key)
+        {
+            if (keys.Contains(key))
+            {
+                return;
+            }
+
+            if (Convert.ToBoolean(User32.GetKeyState((int)key) & (int)KeyFlag.Up))
+            {
+                keys.Add(key);
+            }
         }
 
         #endregion
