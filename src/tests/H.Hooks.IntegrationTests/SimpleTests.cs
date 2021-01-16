@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using H.Tests.Extensions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace H.Hooks.IntegrationTests
@@ -14,9 +15,7 @@ namespace H.Hooks.IntegrationTests
             using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var cancellationToken = cancellationTokenSource.Token;
 
-            using var hook = new LowLevelKeyboardHook();
-            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            using var hook = new LowLevelKeyboardHook().WithEventLogging();
 
             hook.Start();
             
@@ -32,9 +31,7 @@ namespace H.Hooks.IntegrationTests
             using var hook = new LowLevelKeyboardHook
             {
                 Handling = true,
-            };
-            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            }.WithEventLogging();
             hook.KeyUp += (_, args) => args.IsHandled = true;
             hook.KeyDown += (_, args) => args.IsHandled = true;
             
@@ -52,9 +49,7 @@ namespace H.Hooks.IntegrationTests
             using var hook = new LowLevelKeyboardHook
             {
                 IsExtendedMode = true,
-            };
-            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            }.WithEventLogging();
 
             hook.Start();
 
@@ -70,11 +65,7 @@ namespace H.Hooks.IntegrationTests
             using var hook = new LowLevelKeyboardHook
             {
                 IsLeftRightGranularity = true,
-            };
-            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
-            hook.KeyUp += (_, args) => args.IsHandled = true;
-            hook.KeyDown += (_, args) => args.IsHandled = true;
+            }.WithEventLogging();
 
             hook.Start();
 
@@ -90,9 +81,7 @@ namespace H.Hooks.IntegrationTests
             using var hook = new LowLevelKeyboardHook
             {
                 IsCapsLock = true,
-            };
-            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            }.WithEventLogging();
             hook.KeyUp += (_, args) => args.IsHandled = true;
             hook.KeyDown += (_, args) => args.IsHandled = true;
 
