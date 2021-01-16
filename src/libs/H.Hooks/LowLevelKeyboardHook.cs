@@ -98,6 +98,9 @@ namespace H.Hooks
             var mainKey = (Key)value.VirtualKeyCode;
             keys.Add(mainKey);
 
+            CheckAndAdd(keys, Key.LWin);
+            CheckAndAdd(keys, Key.RWin);
+
             CheckAndAdd(keys, Key.LAlt);
             CheckAndAdd(keys, Key.RAlt);
 
@@ -107,8 +110,15 @@ namespace H.Hooks
             CheckAndAdd(keys, Key.LShift);
             CheckAndAdd(keys, Key.RShift);
 
-            CheckAndAdd(keys, Key.LWin);
-            CheckAndAdd(keys, Key.RWin);
+            if (!IsLeftRightGranularity)
+            {
+                ReplaceIfExists(keys, Key.LAlt, Key.Alt);
+                ReplaceIfExists(keys, Key.RAlt, Key.Alt);
+                ReplaceIfExists(keys, Key.LCtrl, Key.Ctrl);
+                ReplaceIfExists(keys, Key.RCtrl, Key.Ctrl);
+                ReplaceIfExists(keys, Key.LShift, Key.Shift);
+                ReplaceIfExists(keys, Key.RShift, Key.Shift);
+            }
 
             if (IsExtendedMode)
             {
@@ -146,14 +156,30 @@ namespace H.Hooks
             if (!HandleModifierKeys &&
                 keys.All(key => new[]
                 {
-                    Key.LControl, Key.LWin, Key.LAlt, Key.LShift,
-                    Key.RControl, Key.RWin, Key.RAlt, Key.RShift,
+                    Key.LCtrl, Key.LAlt, Key.LShift, Key.LWin,
+                    Key.RCtrl, Key.RAlt, Key.RShift, Key.RWin,
+                    Key.Ctrl, Key.Alt, Key.Shift,
                 }.Contains(key)))
             {
                 return false;
             }
 
             return args.IsHandled;
+        }
+
+        private static void ReplaceIfExists(ICollection<Key> keys, Key from, Key to)
+        {
+            if (!keys.Contains(from))
+            {
+                return;
+            }
+
+            keys.Remove(from);
+
+            if (!keys.Contains(to))
+            {
+                keys.Add(to);
+            }
         }
 
         private static void CheckAndAdd(ICollection<Key> keys, Key key)

@@ -9,7 +9,7 @@ namespace H.Hooks.IntegrationTests
     public class SimpleTests
     {
         [TestMethod]
-        public async Task EventsTest()
+        public async Task DefaultTest()
         {
             using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
             var cancellationToken = cancellationTokenSource.Token;
@@ -31,7 +31,7 @@ namespace H.Hooks.IntegrationTests
             
             using var hook = new LowLevelKeyboardHook
             {
-                HandlingIsEnabled = true,
+                Handling = true,
             };
             hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
             hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
@@ -55,6 +55,26 @@ namespace H.Hooks.IntegrationTests
             };
             hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
             hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+
+            hook.Start();
+
+            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        }
+
+        [TestMethod]
+        public async Task LeftRightGranularityTest()
+        {
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var cancellationToken = cancellationTokenSource.Token;
+
+            using var hook = new LowLevelKeyboardHook
+            {
+                IsLeftRightGranularity = true,
+            };
+            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
+            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            hook.KeyUp += (_, args) => args.IsHandled = true;
+            hook.KeyDown += (_, args) => args.IsHandled = true;
 
             hook.Start();
 

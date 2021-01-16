@@ -34,6 +34,7 @@ namespace H.Hooks
 
         Shift = 0x10,
         Control,
+        Ctrl = Control,
         Menu,
         Alt = Menu,
         Pause,
@@ -181,13 +182,13 @@ namespace H.Hooks
         NumLock = 0x90,
         Scroll,
 
-        OemNecEqual = 0x92,   // '=' key on numpad
+        OemNecEqual = 0x92,         // '=' key on numpad
 
-        OemFjJisho = 0x92,    // 'Dictionary' key
-        OemFjMasshou,         // 'Unregister word' key
-        OemFjTouroku,         // 'Register word' key
-        OemFjLoya,            // 'Left OYAYUBI' key
-        OemFjRoya,            // 'Right OYAYUBI' key
+        OemFjJisho = OemNecEqual,   // 'Dictionary' key
+        OemFjMasshou,               // 'Unregister word' key
+        OemFjTouroku,               // 'Register word' key
+        OemFjLoya,                  // 'Left OYAYUBI' key
+        OemFjRoya,                  // 'Right OYAYUBI' key
 
         LShift = 0xA0,
         LeftShift = LShift,
@@ -347,14 +348,19 @@ namespace H.Hooks
         {
             return key switch
             {
+                Key.Ctrl => nameof(Key.Ctrl),
+                Key.Alt => nameof(Key.Alt),
+                Key.Shift => nameof(Key.Shift),
+
                 Key.LCtrl => nameof(Key.LCtrl),
-                Key.LAlt => nameof(Key.LAlt),
-                Key.LShift => nameof(Key.LShift),
-                Key.LWin => nameof(Key.LWin),
                 Key.RCtrl => nameof(Key.RCtrl),
+                Key.LAlt => nameof(Key.LAlt),
                 Key.RAlt => nameof(Key.RAlt),
+                Key.LShift => nameof(Key.LShift),
                 Key.RShift => nameof(Key.RShift),
+                Key.LWin => nameof(Key.LWin),
                 Key.RWin => nameof(Key.RWin),
+
                 _ => $"{key:G}",
             };
         }

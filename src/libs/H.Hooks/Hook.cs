@@ -28,7 +28,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        protected bool PushToThreadPool => !HandlingIsEnabled;
+        protected bool PushToThreadPool => !Handling;
 
         private int IdHook { get; }
         private Thread? Thread { get; set; }
