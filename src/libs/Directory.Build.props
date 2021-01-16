@@ -22,6 +22,7 @@ feat: Changed Hook.Start to use separate thread.
 feat: Added ExtendedMode.
 feat: Added left-right granularity.
 feat: Added CapsLock support.
+feat: Added KeyboardState support.
     </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>

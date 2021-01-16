@@ -18,10 +18,34 @@ Install-Package H.Hooks
 ### Usage
 
 ```cs
-// code
+using var hook = new LowLevelKeyboardHook();
+hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
+hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+
+hook.Start();
 ```
 
-### Used documentation
+### Advanced usage
+```cs
+// Sends multiple events while key pressed.
+hook.OneUpEvent = false;
+
+// Allows common key combinations, like 1 + 2 + 3.
+hook.IsExtendedMode = true;
+
+// Allows handle modifier keys.
+hook.HandleModifierKeys = true;
+
+// Events will contains separate Left/Right keys.
+hook.IsLeftRightGranularity = true;
+
+// Uses User32.GetKeyboardState instead User32.GetKeyState.
+// Disable this if any problem.
+hook.UseKeyboardState = false;
+
+// Adds Key.Caps to each event if CapsLock is toggled.
+hook.IsCapsLock = false;
+```
 
 ### Contacts
 * [mail](mailto:havendv@gmail.com)
