@@ -34,6 +34,11 @@ namespace H.Hooks
         /// </summary>
         public bool IsLeftRightGranularity { get; set; }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsCapsLock { get; set; }
+
         private Tuple<uint, uint>? LastState { get; set; }
 
         #endregion
@@ -98,17 +103,22 @@ namespace H.Hooks
             var mainKey = (Key)value.VirtualKeyCode;
             keys.Add(mainKey);
 
-            CheckAndAdd(keys, Key.LWin);
-            CheckAndAdd(keys, Key.RWin);
+            if (IsCapsLock)
+            {
+                CheckToggledAndAdd(keys, Key.Caps);
+            }
 
-            CheckAndAdd(keys, Key.LAlt);
-            CheckAndAdd(keys, Key.RAlt);
+            CheckUpAndAdd(keys, Key.LWin);
+            CheckUpAndAdd(keys, Key.RWin);
 
-            CheckAndAdd(keys, Key.LCtrl);
-            CheckAndAdd(keys, Key.RCtrl);
+            CheckUpAndAdd(keys, Key.LAlt);
+            CheckUpAndAdd(keys, Key.RAlt);
 
-            CheckAndAdd(keys, Key.LShift);
-            CheckAndAdd(keys, Key.RShift);
+            CheckUpAndAdd(keys, Key.LCtrl);
+            CheckUpAndAdd(keys, Key.RCtrl);
+
+            CheckUpAndAdd(keys, Key.LShift);
+            CheckUpAndAdd(keys, Key.RShift);
 
             if (!IsLeftRightGranularity)
             {
@@ -132,11 +142,11 @@ namespace H.Hooks
 
                 for (var key = Key.D0; key <= Key.D9; key++)
                 {
-                    CheckAndAdd(keys, key);
+                    CheckUpAndAdd(keys, key);
                 }
                 for (var key = Key.A; key <= Key.Z; key++)
                 {
-                    CheckAndAdd(keys, key);
+                    CheckUpAndAdd(keys, key);
                 }
             }
 
@@ -159,6 +169,7 @@ namespace H.Hooks
                     Key.LCtrl, Key.LAlt, Key.LShift, Key.LWin,
                     Key.RCtrl, Key.RAlt, Key.RShift, Key.RWin,
                     Key.Ctrl, Key.Alt, Key.Shift,
+                    Key.Caps,
                 }.Contains(key)))
             {
                 return false;
@@ -182,17 +193,28 @@ namespace H.Hooks
             }
         }
 
-        private static void CheckAndAdd(ICollection<Key> keys, Key key)
+        private static void CheckAndAdd(ICollection<Key> keys, Key key, int kf)
         {
             if (keys.Contains(key))
             {
                 return;
             }
 
-            if (Convert.ToBoolean(User32.GetKeyState((int)key) & (int)KeyFlag.Up))
+            var state = User32.GetKeyState((int)key);
+            if (Convert.ToBoolean(state & kf))
             {
                 keys.Add(key);
             }
+        }
+
+        private static void CheckUpAndAdd(ICollection<Key> keys, Key key)
+        {
+            CheckAndAdd(keys, key, KF.UP);
+        }
+
+        private static void CheckToggledAndAdd(ICollection<Key> keys, Key key)
+        {
+            CheckAndAdd(keys, key, KF.TOGGLED);
         }
 
         #endregion

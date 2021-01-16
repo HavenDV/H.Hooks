@@ -80,5 +80,25 @@ namespace H.Hooks.IntegrationTests
 
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
         }
+
+        [TestMethod]
+        public async Task CapsLockTest()
+        {
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var cancellationToken = cancellationTokenSource.Token;
+
+            using var hook = new LowLevelKeyboardHook
+            {
+                IsCapsLock = true,
+            };
+            hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
+            hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+            hook.KeyUp += (_, args) => args.IsHandled = true;
+            hook.KeyDown += (_, args) => args.IsHandled = true;
+
+            hook.Start();
+
+            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        }
     }
 }

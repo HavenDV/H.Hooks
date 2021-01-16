@@ -40,6 +40,7 @@ namespace H.Hooks
         Pause,
         Capital,
         CapsLock = Capital,
+        Caps = Capital,
 
         KanaMode = 0x15,
         HanguelMode = KanaMode, /* old name - should be here for compatibility */
@@ -360,6 +361,8 @@ namespace H.Hooks
                 Key.RShift => nameof(Key.RShift),
                 Key.LWin => nameof(Key.LWin),
                 Key.RWin => nameof(Key.RWin),
+
+                Key.Caps => nameof(Key.Caps),
 
                 _ => $"{key:G}",
             };
