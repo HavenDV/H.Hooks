@@ -37,6 +37,11 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
+        public bool UseKeyboardState { get; set; } = true;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsCapsLock { get; set; }
 
         private Tuple<uint, uint>? LastState { get; set; }
@@ -103,24 +108,40 @@ namespace H.Hooks
             var mainKey = (Key)value.VirtualKeyCode;
             keys.Add(mainKey);
 
-            if (IsCapsLock)
+            var buffer = (byte[]?)null;
+            if (UseKeyboardState)
             {
-                CheckToggledAndAdd(keys, Key.Caps);
+                // Updates internal buffer.
+                User32.GetKeyState((int)Key.Shift);
+
+                buffer = new byte[256];
+                User32.GetKeyboardState(buffer).Check();
             }
 
-            CheckUpAndAdd(keys, Key.LWin);
-            CheckUpAndAdd(keys, Key.RWin);
+            CheckUpAndAdd(keys, Key.LWin, buffer);
+            CheckUpAndAdd(keys, Key.RWin, buffer);
 
-            CheckUpAndAdd(keys, Key.LAlt);
-            CheckUpAndAdd(keys, Key.RAlt);
+            CheckUpAndAdd(keys, Key.LAlt, buffer);
+            CheckUpAndAdd(keys, Key.RAlt, buffer);
 
-            CheckUpAndAdd(keys, Key.LCtrl);
-            CheckUpAndAdd(keys, Key.RCtrl);
+            CheckUpAndAdd(keys, Key.LCtrl, buffer);
+            CheckUpAndAdd(keys, Key.RCtrl, buffer);
 
-            CheckUpAndAdd(keys, Key.LShift);
-            CheckUpAndAdd(keys, Key.RShift);
+            CheckUpAndAdd(keys, Key.LShift, buffer);
+            CheckUpAndAdd(keys, Key.RShift, buffer);
 
-            if (!IsLeftRightGranularity)
+            if (IsCapsLock)
+            {
+                CheckToggledAndAdd(keys, Key.Caps, buffer);
+            }
+
+            if (IsLeftRightGranularity)
+            {
+                ReplaceIfExists(keys, Key.Alt, Key.LAlt);
+                ReplaceIfExists(keys, Key.Ctrl, Key.LCtrl);
+                ReplaceIfExists(keys, Key.Shift, Key.LShift);
+            }
+            else
             {
                 ReplaceIfExists(keys, Key.LAlt, Key.Alt);
                 ReplaceIfExists(keys, Key.RAlt, Key.Alt);
@@ -132,21 +153,18 @@ namespace H.Hooks
 
             if (IsExtendedMode)
             {
-                //User32.GetKeyState((int) Key.ShiftKey);
-                //var buffer = new byte[256];
-                //User32.GetKeyboardState(buffer);
                 //keys.AddRange(buffer
-                //    .Select((@byte, index) => (@byte, index))
-                //    .Where(pair => (pair.@byte & (int)KeyFlag.Up) > 0)
-                //    .Select(pair => (Key)pair.index));
+                //    .Select((@short, index) => new Tuple<short, int>(@short, index))
+                //    .Where(pair => (pair.Item1 & KF.BYTE_UP) > 0)
+                //    .Select(pair => (Key)pair.Item2));
 
                 for (var key = Key.D0; key <= Key.D9; key++)
                 {
-                    CheckUpAndAdd(keys, key);
+                    CheckUpAndAdd(keys, key, buffer);
                 }
                 for (var key = Key.A; key <= Key.Z; key++)
                 {
-                    CheckUpAndAdd(keys, key);
+                    CheckUpAndAdd(keys, key, buffer);
                 }
             }
 
@@ -193,28 +211,28 @@ namespace H.Hooks
             }
         }
 
-        private static void CheckAndAdd(ICollection<Key> keys, Key key, int kf)
+        private static void CheckAndAdd(ICollection<Key> keys, Key key, byte[]? buffer, int kf)
         {
             if (keys.Contains(key))
             {
                 return;
             }
 
-            var state = User32.GetKeyState((int)key);
+            var state = buffer?[(int)key] ?? User32.GetKeyState((int)key);
             if (Convert.ToBoolean(state & kf))
             {
                 keys.Add(key);
             }
         }
 
-        private static void CheckUpAndAdd(ICollection<Key> keys, Key key)
+        private static void CheckUpAndAdd(ICollection<Key> keys, Key key, byte[]? buffer)
         {
-            CheckAndAdd(keys, key, KF.UP);
+            CheckAndAdd(keys, key, buffer, buffer != null ? KF.BYTE_UP : KF.UP);
         }
 
-        private static void CheckToggledAndAdd(ICollection<Key> keys, Key key)
+        private static void CheckToggledAndAdd(ICollection<Key> keys, Key key, byte[]? buffer)
         {
-            CheckAndAdd(keys, key, KF.TOGGLED);
+            CheckAndAdd(keys, key, buffer, KF.TOGGLED);
         }
 
         #endregion

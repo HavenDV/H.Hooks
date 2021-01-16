@@ -6,7 +6,8 @@ namespace H.Hooks.Core.Interop
     internal static class InteropUtilities
     {
         /// <summary>
-        /// Throws <see cref="Win32Exception"/> if ptr is 0.
+        /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
+        /// if ptr is 0.
         /// </summary>
         /// <param name="ptr"></param>
         /// <exception cref="Win32Exception"></exception>
@@ -22,7 +23,8 @@ namespace H.Hooks.Core.Interop
         }
 
         /// <summary>
-        /// Throws <see cref="Win32Exception"/> if value is <see langword="false"/>.
+        /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
+        /// if value is <see langword="false"/>.
         /// </summary>
         /// <param name="value"></param>
         /// <exception cref="Win32Exception"></exception>

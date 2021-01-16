@@ -17,6 +17,11 @@ namespace H.Hooks.Core.Interop.WinUser
         /// <summary>
         /// 
         /// </summary>
+        public const int BYTE_UP = 0x80;
+
+        /// <summary>
+        /// 
+        /// </summary>
         public const int EXTENDED = 0x0100;
 
         /// <summary>
