@@ -29,6 +29,7 @@ namespace H.Hooks.Extensions
                 {
                     handler?.Invoke(sender, value);
                 });
+                return;
             }
 
             handler?.Invoke(sender, value);

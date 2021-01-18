@@ -16,13 +16,14 @@
   </ItemGroup>
 
   <PropertyGroup Label="Nuget">
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
     <PackageReleaseNotes>
 feat: Changed Hook.Start to use separate thread.
 feat: Added ExtendedMode.
 feat: Added left-right granularity.
 feat: Added CapsLock support.
 feat: Added KeyboardState support.
+fix: Fixed double events bug.
     </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
