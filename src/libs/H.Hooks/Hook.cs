@@ -33,6 +33,7 @@ namespace H.Hooks
         private int IdHook { get; }
         private Thread? Thread { get; set; }
         private uint Id { get; set; }
+        private HookProc Delegate { get; }
 
         #endregion
 
@@ -59,6 +60,7 @@ namespace H.Hooks
         protected internal Hook(int idHook)
         {
             IdHook = idHook;
+            Delegate = Callback;
         }
 
         #endregion
@@ -121,7 +123,7 @@ namespace H.Hooks
                     WM.QUIT, 
                     PM.NOREMOVE);
 
-                var handle = User32.SetWindowsHookEx(IdHook, Callback, 0, 0).Check();
+                var handle = User32.SetWindowsHookEx(IdHook, Delegate, 0, 0).Check();
 
                 while (true)
                 {
