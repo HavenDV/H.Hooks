@@ -14,4 +14,7 @@ using var hook = new LowLevelKeyboardHook
 
 hook.Start();
 
-await Task.Delay(TimeSpan.FromHours(5));
+while (Console.ReadKey(false).Key != ConsoleKey.Escape)
+{
+    await Task.Delay(TimeSpan.FromMilliseconds(1));
+}

@@ -175,7 +175,7 @@ namespace H.Hooks
                 return;
             }
 
-            User32.PostThreadMessage(ThreadId, WM.QUIT, 0, 0);
+            User32.PostThreadMessage(ThreadId, WM.QUIT, 0, 0).Check();
             Thread?.Join();
             Thread = null;
         }
