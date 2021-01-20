@@ -104,10 +104,13 @@ namespace H.Hooks
             var value = InteropUtilities.ToStructure<KeyboardHookStruct>(lParam);
             if (OneUpEvent)
             {
-                if (LastState != null && LastState.Item1 == value.VirtualKeyCode && LastState.Item2 == value.Flags)
+                if (LastState != null && 
+                    LastState.Item1 == value.VirtualKeyCode && 
+                    LastState.Item2 == value.Flags)
                 {
                     return true;
                 }
+
                 LastState = new Tuple<uint, uint>(value.VirtualKeyCode, value.Flags);
             }
 
