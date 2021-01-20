@@ -88,8 +88,8 @@ namespace H.Hooks.Core.Interop.WinUser
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         public static extern nint CallNextHookEx(
             nint hhk, 
-            int nCode, 
-            int wParam, 
+            int nCode,
+            nint wParam, 
             nint lParam);
 
         /// <summary>

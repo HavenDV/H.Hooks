@@ -7,5 +7,5 @@
     /// <param name="wParam">The virtual-key code of the key that generated the keystroke message.</param>
     /// <param name="lParam">The repeat count, scan code, extended-key flag, context code, previous key-state flag, and transition-state flag. For more information about the lParam parameter, see Keystroke Message Flags.</param>
     /// <returns>If code is less than zero, the hook procedure must return the value returned by CallNextHookEx. If code is greater than or equal to zero, and the hook procedure did not process the message, it is highly recommended that you call CallNextHookEx and return the value it returns; otherwise bad stuff.</returns>
-    internal delegate nint HookProc(int code, int wParam, nint lParam);
+    internal delegate nint HookProc(int code, nint wParam, nint lParam);
 }

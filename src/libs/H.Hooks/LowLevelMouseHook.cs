@@ -104,7 +104,7 @@ namespace H.Hooks
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        protected override bool InternalCallback(int nCode, int wParam, nint lParam)
+        protected override bool InternalCallback(int nCode, nint wParam, nint lParam)
         {
             var value = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParam);
 

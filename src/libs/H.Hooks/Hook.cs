@@ -74,13 +74,13 @@ namespace H.Hooks
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        protected abstract bool InternalCallback(int nCode, int wParam, nint lParam);
+        protected abstract bool InternalCallback(int nCode, nint wParam, nint lParam);
 
         #endregion
 
         #region Private methods
 
-        private nint Callback(int nCode, int wParam, nint lParam)
+        private nint Callback(int nCode, nint wParam, nint lParam)
         {
             try
             {
