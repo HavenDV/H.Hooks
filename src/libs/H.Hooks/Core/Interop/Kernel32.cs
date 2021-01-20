@@ -12,7 +12,7 @@ namespace H.Hooks.Core.Interop
         /// Until the thread terminates, the thread identifier uniquely identifies
         /// the thread throughout the system.
         /// </remarks>
-        [DllImport("kernel32.dll")]
+        [DllImport("kernel32.dll", SetLastError = true)]
         public static extern uint GetCurrentThreadId();
     }
 }

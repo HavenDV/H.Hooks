@@ -34,7 +34,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// If the function fails, the return value is NULL.
         /// To get extended error information, call GetLastError.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern nint SetWindowsHookEx(
             int idHook, 
             HookProc lpfn, 
@@ -58,7 +58,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// even after UnhookWindowsHookEx returns. If the hook procedure is not being called concurrently,
         /// the hook procedure is removed immediately before UnhookWindowsHookEx returns.
         /// </remarks>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool UnhookWindowsHookEx(
             nint hhk);
 
@@ -85,7 +85,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// The meaning of the return value depends on the hook type.
         /// For more information, see the descriptions of the individual hook procedures.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern nint CallNextHookEx(
             nint hhk, 
             int nCode, 
@@ -117,7 +117,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// A toggle key's indicator light (if any) on the keyboard will be on when the key is toggled,
         /// and off when the key is untoggled.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern short GetKeyState(
             int key);
 
@@ -136,7 +136,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// It has been found that declaring and calling GetKeyState on any key
         /// before calling GetKeyboardState will solve this issue.
         /// </remarks>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool GetKeyboardState(byte[] lpKeyState);
 
         /// <summary>
@@ -182,7 +182,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// If a message is available, the return value is nonzero. <br/>
         /// If no messages are available, the return value is zero.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool PeekMessage(
             out NativeMessage lpMsg, 
             nint hWnd, 
@@ -231,7 +231,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// if hWnd is an invalid window handle or lpMsg is an invalid pointer.
         /// To get extended error information, call GetLastError. <br/>
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern int GetMessage(
             out NativeMessage lpMsg, 
             nint hWnd, 
@@ -257,7 +257,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// <returns>
         /// The return value is the result of the message processing and depends on the message.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern nint DefWindowProc(
             nint hWnd, 
             uint msg, 
@@ -292,7 +292,7 @@ namespace H.Hooks.Core.Interop.WinUser
         /// or if the thread specified by idThread does not have a message queue.
         /// GetLastError returns ERROR_NOT_ENOUGH_QUOTA when the message limit is hit.
         /// </returns>
-        [DllImport("user32.dll")]
+        [DllImport("user32.dll", SetLastError = true)]
         public static extern bool PostThreadMessage(
             uint idThread, 
             uint msg, 

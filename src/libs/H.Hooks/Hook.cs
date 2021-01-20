@@ -30,9 +30,9 @@ namespace H.Hooks
         /// </summary>
         protected bool PushToThreadPool => !Handling;
 
-        private int IdHook { get; }
+        private int Type { get; }
         private Thread? Thread { get; set; }
-        private uint Id { get; set; }
+        private uint ThreadId { get; set; }
         private HookProc Delegate { get; }
 
         #endregion
@@ -56,10 +56,10 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="idHook"></param>
-        protected internal Hook(int idHook)
+        /// <param name="type"></param>
+        protected internal Hook(int type)
         {
-            IdHook = idHook;
+            Type = type;
             Delegate = Callback;
         }
 
@@ -114,34 +114,50 @@ namespace H.Hooks
 
             Thread = new Thread(() =>
             {
-                Id = Kernel32.GetCurrentThreadId();
-
-                User32.PeekMessage(
-                    out _, 
-                    -1, 
-                    WM.QUIT,
-                    WM.QUIT, 
-                    PM.NOREMOVE);
-
-                var handle = User32.SetWindowsHookEx(IdHook, Delegate, 0, 0).Check();
-
-                while (true)
+                try
                 {
-                    var result = User32.GetMessage(
-                        out var msg, 
-                        -1,
+                    ThreadId = Kernel32.GetCurrentThreadId();
+
+                    User32.PeekMessage(
+                        out _, 
+                        -1, 
                         WM.QUIT,
-                        WM.QUIT);
-                    if (result != 0 || 
-                        msg.msg == WM.QUIT)
+                        WM.QUIT, 
+                        PM.NOREMOVE);
+
+                    var handle = User32.SetWindowsHookEx(Type, Delegate, 0, 0).Check();
+
+                    try
                     {
-                        break;
+                        while (true)
+                        {
+                            var result = User32.GetMessage(
+                                out var msg,
+                                -1,
+                                WM.QUIT,
+                                WM.QUIT);
+                            if (result == -1)
+                            {
+                                InteropUtilities.ThrowWin32Exception();
+                            }
+
+                            if (msg.msg == WM.QUIT)
+                            {
+                                break;
+                            }
+
+                            User32.DefWindowProc(msg.handle, msg.msg, msg.wParam, msg.lParam);
+                        }
                     }
-
-                    User32.DefWindowProc(msg.handle, msg.msg, msg.wParam, msg.lParam);
+                    finally
+                    {
+                        User32.UnhookWindowsHookEx(handle).Check();
+                    }
                 }
-
-                User32.UnhookWindowsHookEx(handle);
+                catch (Exception exception)
+                {
+                    OnExceptionOccurred(exception);
+                }
             })
             {
                 IsBackground = true,
@@ -159,7 +175,7 @@ namespace H.Hooks
                 return;
             }
 
-            User32.PostThreadMessage(Id, WM.QUIT, 0, 0);
+            User32.PostThreadMessage(ThreadId, WM.QUIT, 0, 0);
             Thread?.Join();
             Thread = null;
         }
