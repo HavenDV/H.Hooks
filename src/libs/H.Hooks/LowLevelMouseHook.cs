@@ -19,6 +19,37 @@ namespace H.Hooks
         public bool GenerateMouseMoveEvents { get; set; }
 
         /// <summary>
+        /// Adding keyboard keys. Please see properties:
+        /// IsExtendedMode/IsLeftRightGranularity/UseKeyboardState/IsCapsLock
+        /// </summary>
+        public bool AddKeyboardKeys { get; set; }
+
+        /// <summary>
+        /// Allows common key combinations, like 1 + 2 + 3. <br/>
+        /// Default value: <see langword="false"/>.
+        /// </summary>
+        public bool IsExtendedMode { get; set; }
+
+        /// <summary>
+        /// Events will contains separate Left/Right keys. <br/>
+        /// Default value: <see langword="false"/>.
+        /// </summary>
+        public bool IsLeftRightGranularity { get; set; }
+
+        /// <summary>
+        /// Uses User32.GetKeyboardState instead User32.GetKeyState. <br/>
+        /// Disable this if any problem. <br/>
+        /// Default value: <see langword="true"/>.
+        /// </summary>
+        public bool UseKeyboardState { get; set; } = true;
+
+        /// <summary>
+        /// Adds <see cref="Key.Caps"/> to each event if CapsLock is toggled. <br/>
+        /// Default value: <see langword="true"/>.
+        /// </summary>
+        public bool IsCapsLock { get; set; }
+
+        /// <summary>
         /// Default: Registry value HKCU\Control Panel\Mouse\DoubleClickSpeed or 500 ms.
         /// </summary>
         public TimeSpan DoubleClickSpeed { get; set; }
@@ -203,6 +234,18 @@ namespace H.Hooks
             if (key != Key.MouseNone)
             {
                 keys.Add(key);
+            }
+
+            if (AddKeyboardKeys)
+            {
+                keys.AddRange(
+                    Keyboard.GetPressedKeys(
+                        UseKeyboardState,
+                        IsCapsLock,
+                        IsLeftRightGranularity,
+                        IsExtendedMode
+                    )
+                );
             }
 
             var args = new MouseEventArgs(

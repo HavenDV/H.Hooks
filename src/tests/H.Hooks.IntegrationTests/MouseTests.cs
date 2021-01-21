@@ -40,5 +40,24 @@ namespace H.Hooks.IntegrationTests
 
             await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
         }
+
+        [TestMethod]
+        public async Task AddKeyboardKeysTest()
+        {
+            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+            var cancellationToken = cancellationTokenSource.Token;
+
+            using var hook = new LowLevelMouseHook
+            {
+                AddKeyboardKeys = true,
+                IsLeftRightGranularity = true,
+                IsCapsLock = true,
+                IsExtendedMode = true,
+            }.WithEventLogging();
+
+            hook.Start();
+
+            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+        }
     }
 }

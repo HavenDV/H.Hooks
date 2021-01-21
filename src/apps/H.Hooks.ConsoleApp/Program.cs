@@ -14,6 +14,10 @@ using var keyboardHook = new LowLevelKeyboardHook
 using var mouseHook = new LowLevelMouseHook
 {
     Handling = true,
+    AddKeyboardKeys = true,
+    IsLeftRightGranularity = true,
+    IsCapsLock = true,
+    IsExtendedMode = true,
 }.WithEventLogging();
 
 keyboardHook.Start();
