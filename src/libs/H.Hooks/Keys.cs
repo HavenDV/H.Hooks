@@ -109,7 +109,9 @@ namespace H.Hooks
         /// <returns></returns>
         public override string ToString()
         {
-            return string.Join("+", Values.Select(value => $"{value.ToFixedString()}"));
+            return string.Join("+", Values
+                .OrderBy(key => key)
+                .Select(value => $"{value.ToFixedString()}"));
         }
 
         /// <summary>
@@ -143,7 +145,10 @@ namespace H.Hooks
             unchecked
             {
                 return Values
-                    .Aggregate(27, static (current, value) => (current * 397) ^ value.GetHashCode());
+                    .OrderBy(key => key)
+                    .Aggregate(
+                        27,
+                        static (current, value) => (current * 397) ^ value.GetHashCode());
             }
         }
 
