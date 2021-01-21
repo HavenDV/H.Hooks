@@ -121,8 +121,8 @@ namespace H.Hooks
                     User32.PeekMessage(
                         out _, 
                         -1, 
-                        WM.QUIT,
-                        WM.QUIT, 
+                        0,
+                        0, 
                         PM.NOREMOVE);
 
                     var handle = User32.SetWindowsHookEx(Type, Delegate, 0, 0).Check();
@@ -134,8 +134,8 @@ namespace H.Hooks
                             var result = User32.GetMessage(
                                 out var msg,
                                 -1,
-                                WM.QUIT,
-                                WM.QUIT);
+                                0,
+                                0);
                             if (result == -1)
                             {
                                 InteropUtilities.ThrowWin32Exception();

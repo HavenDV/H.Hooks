@@ -26,7 +26,7 @@ feat: Added KeyboardState support.
 fix: Fixed double events bug.
 feat: Added additional errors check.
 fix: Fixed OneUpEvent handling bug.
-
+fix: Fixed Hook Windows messages filter bug.
     </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
