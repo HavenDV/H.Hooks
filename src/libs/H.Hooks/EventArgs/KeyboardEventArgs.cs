@@ -1,11 +1,12 @@
 ﻿using System;
+// ReSharper disable CheckNamespace
 
 namespace H.Hooks
 {
     /// <summary>
     /// 
     /// </summary>
-    public class KeyboardHookEventArgs : EventArgs
+    public class KeyboardEventArgs : EventArgs
     {
         #region Properties
 
@@ -15,7 +16,9 @@ namespace H.Hooks
         public Keys Keys { get; }
 
         /// <summary>
-        /// 
+        /// Set this property to <see langword="true"/> inside
+        /// your event handler to prevent further processing
+        /// of the event in other applications.
         /// </summary>
         public bool IsHandled { get; set; }
 
@@ -23,7 +26,7 @@ namespace H.Hooks
 
         #region Constructors
 
-        internal KeyboardHookEventArgs(params Key[] keys)
+        internal KeyboardEventArgs(params Key[] keys)
         {
             Keys = new Keys(keys);
         }

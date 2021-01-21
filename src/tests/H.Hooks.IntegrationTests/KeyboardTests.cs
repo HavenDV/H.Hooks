@@ -32,8 +32,8 @@ namespace H.Hooks.IntegrationTests
             {
                 Handling = true,
             }.WithEventLogging();
-            hook.KeyUp += (_, args) => args.IsHandled = true;
-            hook.KeyDown += (_, args) => args.IsHandled = true;
+            hook.Up += (_, args) => args.IsHandled = true;
+            hook.Down += (_, args) => args.IsHandled = true;
             
             hook.Start();
 
@@ -82,8 +82,6 @@ namespace H.Hooks.IntegrationTests
             {
                 IsCapsLock = true,
             }.WithEventLogging();
-            hook.KeyUp += (_, args) => args.IsHandled = true;
-            hook.KeyDown += (_, args) => args.IsHandled = true;
 
             hook.Start();
 

@@ -63,6 +63,11 @@ namespace H.Hooks.Core.Interop.WinUser
         /// </summary>
         public const int MOUSEWHEEL = 0x020A;
 
+        /// <summary>
+        /// The WM_MOUSEWHEEL message is posted when the user presses the mouse wheel. 
+        /// </summary>
+        public const int MOUSEWHEELALT = 0x020E;
+
         public const int XBUTTONDOWN = 0x020B;
         public const int XBUTTONUP = 0x020C;
         public const int XBUTTONDBLCLK = 0x020D;

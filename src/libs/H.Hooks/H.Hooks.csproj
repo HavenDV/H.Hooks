@@ -14,4 +14,8 @@
     <PackageTags>hooks, low-level, SetWindowsHookEx, global, keyboard, events, clicks, keys</PackageTags>
   </PropertyGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Win32.Registry" Version="5.0.0" />
+  </ItemGroup>
+
 </Project>

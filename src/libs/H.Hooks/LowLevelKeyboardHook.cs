@@ -60,21 +60,21 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<KeyboardHookEventArgs>? KeyDown;
+        public event EventHandler<KeyboardEventArgs>? Down;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<KeyboardHookEventArgs>? KeyUp;
+        public event EventHandler<KeyboardEventArgs>? Up;
 
-        private void OnKeyDown(KeyboardHookEventArgs value)
+        private void OnDown(KeyboardEventArgs value)
         {
-            KeyDown?.Invoke(this, value, PushToThreadPool);
+            Down?.Invoke(this, value, PushToThreadPool);
         }
 
-        private void OnKeyUp(KeyboardHookEventArgs value)
+        private void OnUp(KeyboardEventArgs value)
         {
-            KeyUp?.Invoke(this, value, PushToThreadPool);
+            Up?.Invoke(this, value, PushToThreadPool);
         }
 
         #endregion
@@ -176,15 +176,15 @@ namespace H.Hooks
                 }
             }
 
-            var args = new KeyboardHookEventArgs(keys.ToArray());
+            var args = new KeyboardEventArgs(keys.ToArray());
             var isKeyDown = value.Flags >> 7 == 0;
             if (isKeyDown)
             {
-                OnKeyDown(args);
+                OnDown(args);
             }
             else
             {
-                OnKeyUp(args);
+                OnUp(args);
             }
 
             var isHandled = args.IsHandled;

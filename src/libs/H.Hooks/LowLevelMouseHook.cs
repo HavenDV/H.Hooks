@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 using H.Hooks.Extensions;
@@ -10,76 +11,73 @@ namespace H.Hooks
     /// </summary>
     public sealed class LowLevelMouseHook : Hook
     {
+        #region Properties
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool GenerateMouseMoveEvents { get; set; }
+
+        /// <summary>
+        /// Default: Registry value HKCU\Control Panel\Mouse\DoubleClickSpeed or 500 ms.
+        /// </summary>
+        public TimeSpan DoubleClickSpeed { get; set; }
+
+        private DateTime PreviousDownTime { get; set; } = DateTime.MinValue;
+        private DateTime LastDownTime { get; set; } = DateTime.MinValue;
+
+        #endregion
+
         #region Events
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseUp;
+        public event EventHandler<MouseEventArgs>? Up;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseDown;
+        public event EventHandler<MouseEventArgs>? Down;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseClick;
+        public event EventHandler<MouseEventArgs>? DoubleClick;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseClickExt;
+        public event EventHandler<MouseEventArgs>? Wheel;
 
         /// <summary>
         /// 
         /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseDoubleClick;
+        public event EventHandler<MouseEventArgs>? Move;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseWheel;
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler<MouseEventExtArgs>? MouseMove;
-
-        private void OnMouseUp(MouseEventExtArgs value)
+        private void OnUp(MouseEventArgs value)
         {
-            MouseUp?.Invoke(this, value, PushToThreadPool);
+            Up?.Invoke(this, value, PushToThreadPool);
         }
 
-        private void OnMouseDown(MouseEventExtArgs value)
+        private void OnDown(MouseEventArgs value)
         {
-            MouseDown?.Invoke(this, value, PushToThreadPool);
+            Down?.Invoke(this, value, PushToThreadPool);
         }
 
-        private void OnMouseClick(MouseEventExtArgs value)
+        private void OnDoubleClick(MouseEventArgs value)
         {
-            MouseClick?.Invoke(this, value, PushToThreadPool);
+            DoubleClick?.Invoke(this, value, PushToThreadPool);
         }
 
-        private void OnMouseClickExt(MouseEventExtArgs value)
+        private void OnWheel(MouseEventArgs value)
         {
-            MouseClickExt?.Invoke(this, value, PushToThreadPool);
+            Wheel?.Invoke(this, value, PushToThreadPool);
         }
 
-        private void OnMouseDoubleClick(MouseEventExtArgs value)
+        private void OnMove(MouseEventArgs value)
         {
-            MouseDoubleClick?.Invoke(this, value, PushToThreadPool);
-        }
-
-        private void OnMouseWheel(MouseEventExtArgs value)
-        {
-            MouseWheel?.Invoke(this, value, PushToThreadPool);
-        }
-
-        private void OnMouseMove(MouseEventExtArgs value)
-        {
-            MouseMove?.Invoke(this, value, PushToThreadPool);
+            Move?.Invoke(this, value, PushToThreadPool);
         }
 
         #endregion
@@ -91,6 +89,7 @@ namespace H.Hooks
         /// </summary>
         public LowLevelMouseHook() : base(WH.MOUSE_LL)
         {
+            DoubleClickSpeed = Registry.GetDoubleClickSpeed();
         }
 
         #endregion
@@ -106,74 +105,89 @@ namespace H.Hooks
         /// <returns></returns>
         protected override bool InternalCallback(int nCode, nint wParam, nint lParam)
         {
-            var value = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParam);
+            if (wParam == WM.MOUSEMOVE &&
+                !GenerateMouseMoveEvents)
+            {
+                return false;
+            }
 
+            var value = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParam);
+            
             //detect button clicked
-            var button = MouseButtons.None;
-            short mouseDelta = 0;
-            var clickCount = 0;
+            var key = Key.MouseNone;
+            var mouseDelta = 0;
+            var isDoubleClick = false;
             var mouseDown = false;
             var mouseUp = false;
             var mouseMove = false;
+            var specialKey = (value.MouseData >> 16) switch
+            {
+                1 => Key.MouseXButton1,
+                2 => Key.MouseXButton2,
+                _ => Key.MouseNone,
+            };
 
             switch (wParam)
             {
                 case WM.LBUTTONDOWN:
                     mouseDown = true;
-                    button = MouseButtons.Left;
-                    clickCount = 1;
+                    key = Key.MouseLeft;
                     break;
                 case WM.LBUTTONUP:
                     mouseUp = true;
-                    button = MouseButtons.Left;
-                    clickCount = 1;
+                    key = Key.MouseLeft;
                     break;
                 case WM.LBUTTONDBLCLK:
-                    button = MouseButtons.Left;
-                    clickCount = 2;
+                    key = Key.MouseLeft;
+                    isDoubleClick = true;
                     break;
+
                 case WM.RBUTTONDOWN:
                     mouseDown = true;
-                    button = MouseButtons.Right;
-                    clickCount = 1;
+                    key = Key.MouseRight;
                     break;
                 case WM.RBUTTONUP:
                     mouseUp = true;
-                    button = MouseButtons.Right;
-                    clickCount = 1;
+                    key = Key.MouseRight;
                     break;
                 case WM.RBUTTONDBLCLK:
-                    button = MouseButtons.Right;
-                    clickCount = 2;
+                    key = Key.MouseRight;
+                    isDoubleClick = true;
                     break;
+
+                case WM.MBUTTONDOWN:
+                    mouseDown = true;
+                    key = Key.MouseMiddle;
+                    break;
+                case WM.MBUTTONUP:
+                    mouseUp = true;
+                    key = Key.MouseMiddle;
+                    break;
+                case WM.MBUTTONDBLCLK:
+                    key = Key.MouseMiddle;
+                    isDoubleClick = true;
+                    break;
+
                 case WM.XBUTTONDOWN:
                 case WM.NCXBUTTONDOWN:
                     mouseDown = true;
-                    button = MouseButtons.XButton1;
-                    clickCount = 1;
+                    key = specialKey;
                     break;
                 case WM.XBUTTONUP:
                 case WM.NCXBUTTONUP:
                     mouseUp = true;
-                    button = MouseButtons.XButton1;
-                    clickCount = 1;
+                    key = specialKey;
                     break;
                 case WM.XBUTTONDBLCLK:
                 case WM.NCXBUTTONDBLCLK:
-                    button = MouseButtons.XButton1;
-                    clickCount = 2;
+                    key = specialKey;
+                    isDoubleClick = true;
                     break;
-                case WM.MOUSEWHEEL:
-                    //If the message is WM_MOUSEWHEEL, the high-order word of MouseData member is the wheel delta. 
-                    //One wheel click is defined as WHEEL_DELTA, which is 120. 
-                    //(value >> 16) & 0xffff; retrieves the high-order word from the given 32-bit value
-                    mouseDelta = (short)((value.MouseData >> 16) & 0xffff);
 
-                    //TODO: X BUTTONS (I havent them so was unable to test)
-                    //If the message is WM_XBUTTONDOWN, WM_XBUTTONUP, WM_XBUTTONDBLCLK, WM_NCXBUTTONDOWN, WM_NCXBUTTONUP, 
-                    //or WM_NCXBUTTONDBLCLK, the high-order word specifies which X button was pressed or released, 
-                    //and the low-order word is reserved. This value can be one or more of the following values. 
-                    //Otherwise, MouseData is not used. 
+                case WM.MOUSEWHEEL:
+                case WM.MOUSEWHEELALT:
+                    mouseDelta = (short)((value.MouseData >> 16) & 0xffff);
+                    key = Key.MouseWheel;
                     break;
 
                 case WM.MOUSEMOVE:
@@ -185,65 +199,47 @@ namespace H.Hooks
                     break;
             }
 
-            //generate event 
-            var args = new MouseEventExtArgs(
-                button,
-                clickCount,
+            var keys = new List<Key>();
+            if (key != Key.MouseNone)
+            {
+                keys.Add(key);
+            }
+
+            var args = new MouseEventArgs(
                 value.Point.X,
                 value.Point.Y,
-                mouseDelta);
+                mouseDelta,
+                isDoubleClick,
+                keys.ToArray());
 
-            //Mouse up
             if (mouseUp)
             {
-                OnMouseUp(args);
+                OnUp(args);
+                if (DateTime.Now.Subtract(PreviousDownTime) < DoubleClickSpeed)
+                {
+                    OnDoubleClick(args);
+                }
             }
-
-            //Mouse down
             if (mouseDown)
             {
-                args.SpecialButton = value.MouseData > 0
-                    ? (int)Math.Log(value.MouseData, 2)
-                    : 0;
-
-                OnMouseDown(args);
+                PreviousDownTime = LastDownTime;
+                LastDownTime = DateTime.Now;
+                OnDown(args);
             }
-
-            //If someone listens to click and a click is heppened
-            if (clickCount > 0)
+            if (isDoubleClick)
             {
-                OnMouseClick(args);
-                OnMouseClickExt(args);
+                OnDoubleClick(args);
             }
-
-            //If someone listens to double click and a click is heppened
-            if (clickCount == 2)
-            {
-                OnMouseDoubleClick(args);
-            }
-
-            //Wheel was moved
             if (mouseDelta != 0)
             {
-                OnMouseWheel(args);
+                OnWheel(args);
             }
-
-            //If someone listens to move and there was a change in coordinates raise move event
-            //if (m_OldX != mouseHookStruct.Point.X || m_OldY != mouseHookStruct.Point.Y)
             if (mouseMove)
             {
-                //m_OldX = mouseHookStruct.Point.X;
-                //m_OldY = mouseHookStruct.Point.Y;
-
-                OnMouseMove(args);
-
-                //if (s_MouseMoveExt != null)
-                //{
-                //    s_MouseMoveExt.Invoke(null, e);
-                //}
+                OnMove(args);
             }
 
-            return args.Handled;
+            return args.IsHandled;
         }
 
         #endregion

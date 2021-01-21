@@ -316,6 +316,15 @@ namespace H.Hooks
         NoName,
         Pa1,
         OemClear,
+
+        // Mouse Events:
+        MouseNone = 0x0100,
+        MouseLeft,
+        MouseRight,
+        MouseMiddle,
+        MouseWheel,
+        MouseXButton1,
+        MouseXButton2,
     }
 
     public static class KeyExtensions
