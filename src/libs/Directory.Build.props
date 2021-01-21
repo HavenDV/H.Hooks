@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <PropertyGroup Label="Nuget">
-    <Version>1.3.1</Version>
+    <Version>1.3.2</Version>
     <PackageReleaseNotes>
 feat: Changed Hook.Start to use separate thread.
 feat: Added ExtendedMode.
@@ -29,6 +29,7 @@ fix: Fixed OneUpEvent handling bug.
 fix: Fixed Hook Windows messages filter bug.
 feat: Updated MouseHook.
 feat: Added MouseHook.AddKeyboardKeys property.
+feat: Updated Key.Parse and Keys.ToString().
     </PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
