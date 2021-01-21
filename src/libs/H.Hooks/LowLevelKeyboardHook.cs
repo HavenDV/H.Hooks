@@ -51,7 +51,7 @@ namespace H.Hooks
         /// </summary>
         public bool IsCapsLock { get; set; }
 
-        private Tuple<uint, uint>? LastState { get; set; }
+        private Tuple<uint, uint, uint, nint, bool>? LastState { get; set; }
 
         #endregion
 
@@ -102,16 +102,14 @@ namespace H.Hooks
         protected override bool InternalCallback(int nCode, nint wParam, nint lParam)
         {
             var value = InteropUtilities.ToStructure<KeyboardHookStruct>(lParam);
-            if (OneUpEvent)
+            if (OneUpEvent &&
+                LastState != null &&
+                LastState.Item1 == value.VirtualKeyCode &&
+                LastState.Item2 == value.Flags &&
+                LastState.Item3 == value.ScanCode &&
+                LastState.Item4 == value.ExtraInfo)
             {
-                if (LastState != null && 
-                    LastState.Item1 == value.VirtualKeyCode && 
-                    LastState.Item2 == value.Flags)
-                {
-                    return true;
-                }
-
-                LastState = new Tuple<uint, uint>(value.VirtualKeyCode, value.Flags);
+                return LastState.Item5;
             }
 
             var keys = new List<Key>();
@@ -189,6 +187,8 @@ namespace H.Hooks
                 OnKeyUp(args);
             }
 
+            var isHandled = args.IsHandled;
+
             // Disabling handling for modifier keys.
             // If you handle separate modifier keys, you can't handle combinations.
             if (!HandleModifierKeys &&
@@ -200,10 +200,20 @@ namespace H.Hooks
                     Key.Caps,
                 }.Contains(key)))
             {
-                return false;
+                isHandled = false;
             }
 
-            return args.IsHandled;
+            if (OneUpEvent)
+            {
+                LastState = Tuple.Create(
+                    value.VirtualKeyCode,
+                    value.Flags,
+                    value.ScanCode,
+                    value.ExtraInfo,
+                    isHandled);
+            }
+
+            return isHandled;
         }
 
         private static void ReplaceIfExists(ICollection<Key> keys, Key from, Key to)
