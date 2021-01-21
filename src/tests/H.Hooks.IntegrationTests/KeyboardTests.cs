@@ -7,7 +7,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace H.Hooks.IntegrationTests
 {
     [TestClass]
-    public class SimpleTests
+    public class KeyboardTests
     {
         [TestMethod]
         public async Task DefaultTest()
