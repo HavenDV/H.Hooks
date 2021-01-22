@@ -54,8 +54,8 @@ namespace H.Hooks
         /// </summary>
         public TimeSpan DoubleClickSpeed { get; set; }
 
-        private DateTime PreviousDownTime { get; set; } = DateTime.MinValue;
-        private DateTime LastDownTime { get; set; } = DateTime.MinValue;
+        private Dictionary<Key, DateTime> PreviousDownTimeDictionary { get; } = new();
+        private Dictionary<Key, DateTime> LastDownTimeDictionary { get; } = new();
 
         #endregion
 
@@ -258,15 +258,18 @@ namespace H.Hooks
             if (mouseUp)
             {
                 OnUp(args);
-                if (DateTime.Now.Subtract(PreviousDownTime) < DoubleClickSpeed)
+                PreviousDownTimeDictionary
+                    .TryGetValue(key, out var previousDateTime);
+                if (DateTime.Now.Subtract(previousDateTime) < DoubleClickSpeed)
                 {
                     OnDoubleClick(args);
                 }
             }
             if (mouseDown)
             {
-                PreviousDownTime = LastDownTime;
-                LastDownTime = DateTime.Now;
+                LastDownTimeDictionary.TryGetValue(key, out var lastDownTime);
+                PreviousDownTimeDictionary[key] = lastDownTime;
+                LastDownTimeDictionary[key] = DateTime.Now;
                 OnDown(args);
             }
             if (isDoubleClick)
