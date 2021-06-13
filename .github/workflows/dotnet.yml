@@ -6,7 +6,7 @@ jobs:
     strategy:
       matrix:
         dotnet: [ '5.0.x' ]
-        os: [ ubuntu-latest ]
+        os: [ windows-latest ]
 
     runs-on: ${{ matrix.os }}
     name: ${{ matrix.os }} - ${{ matrix.dotnet }}
