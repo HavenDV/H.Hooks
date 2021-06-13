@@ -31,14 +31,14 @@ jobs:
       
     - name: Generate Package Release Notes
       run: |
-        echo 'PACKAGE_RELEASE_NOTES<<EOF' >> %GITHUB_ENV%
-        echo '⭐ Last 10 features:' >> %GITHUB_ENV%
-        git log -10 --pretty=format:"- %s %cs" --grep=feat >> %GITHUB_ENV%
-        echo '' >> %GITHUB_ENV%
-        echo '🐞 Last 10 bug fixes:' >> %GITHUB_ENV%
-        git log -10 --pretty=format:"- %s %cs" --grep=fix >> %GITHUB_ENV%
-        echo '' >> %GITHUB_ENV%
-        echo 'EOF' >> %GITHUB_ENV%
+        echo 'PACKAGE_RELEASE_NOTES<<EOF' >> $env:GITHUB_ENV
+        echo '⭐ Last 10 features:' >> $env:GITHUB_ENV
+        git log -10 --pretty=format:"- %s %cs" --grep=feat >> $env:GITHUB_ENV
+        echo '' >> $env:GITHUB_ENV
+        echo '🐞 Last 10 bug fixes:' >> $env:GITHUB_ENV
+        git log -10 --pretty=format:"- %s %cs" --grep=fix >> $env:GITHUB_ENV
+        echo '' >> $env:GITHUB_ENV
+        echo 'EOF' >> $env:GITHUB_ENV
     
     - name: Build
       run: dotnet build --configuration Release
