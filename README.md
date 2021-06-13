@@ -18,23 +18,48 @@ Install-Package H.Hooks
 ### Usage
 
 ```cs
-using var hook = new LowLevelKeyboardHook();
-hook.KeyUp += (_, args) => Console.WriteLine($"{nameof(hook.KeyUp)}: {args}");
-hook.KeyDown += (_, args) => Console.WriteLine($"{nameof(hook.KeyDown)}: {args}");
+using var keyboardHook = new LowLevelKeyboardHook();
+keyboardHook.KeyUp += (_, args) => Console.WriteLine($"{nameof(keyboardHook.KeyUp)}: {args}");
+keyboardHook.KeyDown += (_, args) => Console.WriteLine($"{nameof(keyboardHook.KeyDown)}: {args}");
 
-hook.Start();
+keyboardHook.Start();
+
+using var mouseHook = new LowLevelMouseHook();
+mouseHook.Down += (_, args) => Console.WriteLine($"{nameof(mouseHook.Down)}: {args}");
+mouseHook.Move += (_, args) => Console.WriteLine($"{nameof(mouseHook.Move)}: {args}");
+
+mouseHook.Start();
+```
+
+### Interception of input and cancellation
+Allows you to intercept input for other applications and cancel events (via `args.IsHandled = true`).  
+Do not enable this unless you need it.  
+When enabled, overrides the automatic dispatch of events to the ThreadPool
+and may cause performance issues with any slow handlers. In this case,
+you need to use `ThreadPool.QueueUserWorkItem(WaitCallback)`
+when handling events (after set up `args.IsHandled = true`).
+
+```cs
+hook.Handling = true;
+hook.KeyUp += (_, args) => args.IsHandled = true;
 ```
 
 ### Advanced usage
 ```cs
+// Enables Move events.
+mouseHook.GenerateMouseMoveEvents = true;
+
+// Adds keyboard keys. Allows getting combinations like Shift + LeftMouse.
+mouseHook.AddKeyboardKeys = true;
+
 // Sends multiple events while key pressed.
-hook.OneUpEvent = false;
+keyboardHook.OneUpEvent = false;
+
+// Allows handle modifier keys.
+keyboardHook.HandleModifierKeys = true;
 
 // Allows common key combinations, like 1 + 2 + 3.
 hook.IsExtendedMode = true;
-
-// Allows handle modifier keys.
-hook.HandleModifierKeys = true;
 
 // Events will contains separate Left/Right keys.
 hook.IsLeftRightGranularity = true;

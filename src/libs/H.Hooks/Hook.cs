@@ -8,15 +8,19 @@ using H.Hooks.Extensions;
 namespace H.Hooks
 {
     /// <summary>
-    /// 
+    /// Base class for all hooks.
     /// </summary>
     public abstract class Hook : IDisposable
     {
         #region Properties
 
         /// <summary>
-        /// If activated, you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
-        /// when handling events(After set up args.Handled = true).
+        /// Allows you to intercept input for other applications and cancel events (via args.IsHandled = true). <br/>
+        /// Do not enable this unless you need it. <br/>
+        /// When enabled, overrides the automatic dispatch of events to the ThreadPool
+        /// and may cause performance issues with any slow handlers. In this case,
+        /// you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
+        /// when handling events (after set up args.IsHandled = true).
         /// </summary>
         public bool Handling { get; set; }
 
@@ -26,7 +30,7 @@ namespace H.Hooks
         public bool IsStarted => Thread != null;
 
         /// <summary>
-        /// 
+        /// See <see cref="Handling"/>.
         /// </summary>
         protected bool PushToThreadPool => !Handling;
 

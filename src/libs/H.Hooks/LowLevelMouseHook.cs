@@ -14,13 +14,21 @@ namespace H.Hooks
         #region Properties
 
         /// <summary>
-        /// 
+        /// Enables <see cref="Move"/> events. <br/>
+        /// Default value: <see langword="false"/>.
         /// </summary>
         public bool GenerateMouseMoveEvents { get; set; }
 
         /// <summary>
-        /// Adding keyboard keys. Please see properties:
-        /// IsExtendedMode/IsLeftRightGranularity/UseKeyboardState/IsCapsLock
+        /// Default value: Registry value HKCU\Control Panel\Mouse\DoubleClickSpeed or 500 ms.
+        /// </summary>
+        public TimeSpan DoubleClickSpeed { get; set; }
+
+        /// <summary>
+        /// Adds keyboard keys. Allows getting combinations like Shift + LeftMouse. <br/>
+        /// Please see properties:
+        /// IsExtendedMode/IsLeftRightGranularity/UseKeyboardState/IsCapsLock. <br/>
+        /// Default value: <see langword="false"/>.
         /// </summary>
         public bool AddKeyboardKeys { get; set; }
 
@@ -48,11 +56,6 @@ namespace H.Hooks
         /// Default value: <see langword="true"/>.
         /// </summary>
         public bool IsCapsLock { get; set; }
-
-        /// <summary>
-        /// Default: Registry value HKCU\Control Panel\Mouse\DoubleClickSpeed or 500 ms.
-        /// </summary>
-        public TimeSpan DoubleClickSpeed { get; set; }
 
         private Dictionary<Key, DateTime> PreviousDownTimeDictionary { get; } = new();
         private Dictionary<Key, DateTime> LastDownTimeDictionary { get; } = new();
@@ -82,7 +85,7 @@ namespace H.Hooks
         public event EventHandler<MouseEventArgs>? Wheel;
 
         /// <summary>
-        /// 
+        /// Disabled by default. See <see cref="GenerateMouseMoveEvents"/>.
         /// </summary>
         public event EventHandler<MouseEventArgs>? Move;
 
