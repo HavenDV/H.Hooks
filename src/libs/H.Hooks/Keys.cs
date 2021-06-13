@@ -39,6 +39,21 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
+        public bool IsMouseLeft => Values.Contains(Key.MouseLeft);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsMouseRight => Values.Contains(Key.MouseRight);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool IsMouseMiddle => Values.Contains(Key.MouseMiddle);
+
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsRightCtrl => Values.Contains(Key.RControl);
 
         /// <summary>
