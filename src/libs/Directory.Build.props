@@ -26,7 +26,8 @@
     <PackageProjectUrl>https://github.com/HavenDV/H.Hooks</PackageProjectUrl>
     <RepositoryUrl>https://github.com/HavenDV/H.Hooks</RepositoryUrl>
     <PackageIcon>nuget_icon.png</PackageIcon>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <!-- Currently not working with IncludeSymbols -->
+    <!--<PackageReadmeFile>README.md</PackageReadmeFile>-->
   </PropertyGroup>
 
   <ItemGroup Label="Nuget">
