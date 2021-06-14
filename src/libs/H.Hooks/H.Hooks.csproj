@@ -10,6 +10,8 @@
 - Allows handling combination like 1 + 2 + 3
 - Only one Up event per combination
 - Handle special buttons like Mouse.XButton
+- Optimized, runs hooks in a separate thread. Does not cause freezes when debugging the rest of the code.
+- By default, it delivers events from a ThreadPool instead of a hook thread, which makes it possible to do any action in event handlers without affecting system performance.
     </Description>
     <PackageTags>hooks, low-level, SetWindowsHookEx, global, keyboard, events, clicks, keys</PackageTags>
   </PropertyGroup>
