@@ -19,8 +19,8 @@ Install-Package H.Hooks
 
 ```cs
 using var keyboardHook = new LowLevelKeyboardHook();
-keyboardHook.KeyUp += (_, args) => Console.WriteLine($"{nameof(keyboardHook.KeyUp)}: {args}");
-keyboardHook.KeyDown += (_, args) => Console.WriteLine($"{nameof(keyboardHook.KeyDown)}: {args}");
+keyboardHook.Up += (_, args) => Console.WriteLine($"{nameof(keyboardHook.Up)}: {args}");
+keyboardHook.Down += (_, args) => Console.WriteLine($"{nameof(keyboardHook.Down)}: {args}");
 
 keyboardHook.Start();
 
@@ -41,7 +41,7 @@ when handling events (after set up `args.IsHandled = true`).
 
 ```cs
 hook.Handling = true;
-hook.KeyUp += (_, args) => args.IsHandled = true;
+hook.Up += (_, args) => args.IsHandled = true;
 ```
 
 ### Advanced usage
