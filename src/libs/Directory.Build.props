@@ -53,7 +53,6 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest</AnalysisLevel>
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
-    <NoWarn>$(NoWarn);CA2217;CA1063;CA1003;CA1720;CA5392;CA1508;CA1031</NoWarn>
   </PropertyGroup>
 
 </Project>
