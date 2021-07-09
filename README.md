@@ -5,7 +5,7 @@
 [![Requirements](https://img.shields.io/badge/Requirements-.NET%20Standard%202.0-blue.svg)](https://github.com/dotnet/standard/blob/master/docs/versions/netstandard2.0.md)
 [![Build Status](https://github.com/HavenDV/H.Hooks/workflows/.NET/badge.svg?branch=master)](https://github.com/HavenDV/H.Hooks/actions?query=workflow%3A%22.NET%22)
 
-Description
+It uses Win32 `kernel32.dll` and `user32.dll` calls inside.
 
 ### Nuget
 
