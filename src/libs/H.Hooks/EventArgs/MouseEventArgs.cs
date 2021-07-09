@@ -46,10 +46,7 @@ namespace H.Hooks
         #region Constructors
 
         /// <summary>Initializes a new instance of the <see cref="MouseEventArgs" /> class.</summary>
-        /// <param name="keys">
-        /// One of the <see cref="MouseButtons" /> values that
-        /// indicate which mouse button was pressed.
-        /// </param>
+        /// <param name="keys"></param>
         /// <param name="isDoubleClick"></param>
         /// <param name="x">The x-coordinate of a mouse click, in pixels.</param>
         /// <param name="y">The y-coordinate of a mouse click, in pixels.</param>
