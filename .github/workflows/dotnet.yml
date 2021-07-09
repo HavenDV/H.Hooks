@@ -20,6 +20,7 @@ jobs:
         fetch-depth: 50
 
     - name: Generate build number
+      if: startsWith(github.event.head_commit.message, 'fix:') || startsWith(github.event.head_commit.message, 'feat:')
       uses: einaregilsson/build-number@v3
       with:
         token: ${{ secrets.github_token }}
@@ -47,6 +48,7 @@ jobs:
       run: dotnet test --configuration Release
         
     - name: Publish
+      if: startsWith(github.event.head_commit.message, 'fix:') || startsWith(github.event.head_commit.message, 'feat:')
       run: dotnet nuget push
         src\**.nupkg
         --api-key ${{ secrets.NUGET_KEY }}
