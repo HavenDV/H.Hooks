@@ -6,9 +6,9 @@
 
   <ItemGroup>
     <PackageReference Include="H.Tests" Version="1.0.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.0-preview-20201020-06" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.7" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.7" />
   </ItemGroup>
 
   <ItemGroup Label="GlobalUsings">
