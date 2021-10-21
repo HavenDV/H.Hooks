@@ -9,6 +9,10 @@
     <PackageReference Include="H.Tests" Version="1.0.1" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net4.8'">
+    <Reference Include="System.Net.Http" />
+  </ItemGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\libs\H.Hooks\H.Hooks.csproj" />
   </ItemGroup>
