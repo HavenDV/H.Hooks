@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using H.Hooks.Core.Interop;
+﻿using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 using H.Hooks.Extensions;
 

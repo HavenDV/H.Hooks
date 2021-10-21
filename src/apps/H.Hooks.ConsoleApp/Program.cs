@@ -1,6 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
-using H.Hooks;
+﻿using H.Hooks;
 using H.Tests.Extensions;
 
 using var keyboardHook = new LowLevelKeyboardHook

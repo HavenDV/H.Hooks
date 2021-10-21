@@ -1,6 +1,4 @@
-﻿using System;
-using System.ComponentModel;
-using System.Threading;
+﻿using System.ComponentModel;
 using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 using H.Hooks.Extensions;

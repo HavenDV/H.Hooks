@@ -1,63 +1,56 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using H.Tests.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace H.Hooks.IntegrationTests;
 
-namespace H.Hooks.IntegrationTests
+[TestClass]
+public class MouseTests
 {
-    [TestClass]
-    public class MouseTests
+    [TestMethod]
+    public async Task DefaultTest()
     {
-        [TestMethod]
-        public async Task DefaultTest()
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelMouseHook().WithEventLogging();
+
+        hook.Start();
+
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
+
+    [TestMethod]
+    public async Task HandlingTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelMouseHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
+            Handling = true,
+        }.WithEventLogging();
+        hook.Move += (_, args) => args.IsHandled = true;
+        hook.Down += (_, args) => args.IsHandled = true;
+        hook.Up += (_, args) => args.IsHandled = true;
 
-            using var hook = new LowLevelMouseHook().WithEventLogging();
+        hook.Start();
 
-            hook.Start();
-            
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
 
-        [TestMethod]
-        public async Task HandlingTest()
+    [TestMethod]
+    public async Task AddKeyboardKeysTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelMouseHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
-            
-            using var hook = new LowLevelMouseHook
-            {
-                Handling = true,
-            }.WithEventLogging();
-            hook.Move += (_, args) => args.IsHandled = true;
-            hook.Down += (_, args) => args.IsHandled = true;
-            hook.Up += (_, args) => args.IsHandled = true;
+            AddKeyboardKeys = true,
+            IsLeftRightGranularity = true,
+            IsCapsLock = true,
+            IsExtendedMode = true,
+        }.WithEventLogging();
 
-            hook.Start();
+        hook.Start();
 
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
-
-        [TestMethod]
-        public async Task AddKeyboardKeysTest()
-        {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
-
-            using var hook = new LowLevelMouseHook
-            {
-                AddKeyboardKeys = true,
-                IsLeftRightGranularity = true,
-                IsCapsLock = true,
-                IsExtendedMode = true,
-            }.WithEventLogging();
-
-            hook.Start();
-
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
     }
 }

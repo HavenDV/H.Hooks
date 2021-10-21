@@ -1,91 +1,84 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using H.Tests.Extensions;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+namespace H.Hooks.IntegrationTests;
 
-namespace H.Hooks.IntegrationTests
+[TestClass]
+public class KeyboardTests
 {
-    [TestClass]
-    public class KeyboardTests
+    [TestMethod]
+    public async Task DefaultTest()
     {
-        [TestMethod]
-        public async Task DefaultTest()
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelKeyboardHook().WithEventLogging();
+
+        hook.Start();
+
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
+
+    [TestMethod]
+    public async Task HandlingTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelKeyboardHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
+            Handling = true,
+        }.WithEventLogging();
+        hook.Up += (_, args) => args.IsHandled = true;
+        hook.Down += (_, args) => args.IsHandled = true;
 
-            using var hook = new LowLevelKeyboardHook().WithEventLogging();
+        hook.Start();
 
-            hook.Start();
-            
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
 
-        [TestMethod]
-        public async Task HandlingTest()
+    [TestMethod]
+    public async Task ExtendedModeTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelKeyboardHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
-            
-            using var hook = new LowLevelKeyboardHook
-            {
-                Handling = true,
-            }.WithEventLogging();
-            hook.Up += (_, args) => args.IsHandled = true;
-            hook.Down += (_, args) => args.IsHandled = true;
-            
-            hook.Start();
+            IsExtendedMode = true,
+        }.WithEventLogging();
 
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+        hook.Start();
 
-        [TestMethod]
-        public async Task ExtendedModeTest()
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
+
+    [TestMethod]
+    public async Task LeftRightGranularityTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
+
+        using var hook = new LowLevelKeyboardHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
+            IsLeftRightGranularity = true,
+        }.WithEventLogging();
 
-            using var hook = new LowLevelKeyboardHook
-            {
-                IsExtendedMode = true,
-            }.WithEventLogging();
+        hook.Start();
 
-            hook.Start();
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
+    }
 
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+    [TestMethod]
+    public async Task CapsLockTest()
+    {
+        using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
+        var cancellationToken = cancellationTokenSource.Token;
 
-        [TestMethod]
-        public async Task LeftRightGranularityTest()
+        using var hook = new LowLevelKeyboardHook
         {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
+            IsCapsLock = true,
+        }.WithEventLogging();
 
-            using var hook = new LowLevelKeyboardHook
-            {
-                IsLeftRightGranularity = true,
-            }.WithEventLogging();
+        hook.Start();
 
-            hook.Start();
-
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
-
-        [TestMethod]
-        public async Task CapsLockTest()
-        {
-            using var cancellationTokenSource = new CancellationTokenSource(TimeSpan.FromSeconds(30));
-            var cancellationToken = cancellationTokenSource.Token;
-
-            using var hook = new LowLevelKeyboardHook
-            {
-                IsCapsLock = true,
-            }.WithEventLogging();
-
-            hook.Start();
-
-            await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
-        }
+        await Task.Delay(TimeSpan.FromSeconds(5), cancellationToken);
     }
 }
