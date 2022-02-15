@@ -41,7 +41,7 @@ mouseHook.Start();
 
 // Check keys
 if (args.Keys.Are(Key.Control, Key.Escape)) {
-	// Exit?
+    // Exit?
 }
 ```
 
