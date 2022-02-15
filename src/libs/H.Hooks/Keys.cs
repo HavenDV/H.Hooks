@@ -118,8 +118,10 @@
         /// 
         /// </summary>
         /// <returns></returns>
-        public bool Are(params Key[] values!!)
+        public bool Are(params Key[] values)
         {
+            values = values ?? throw new ArgumentNullException(nameof(values));
+
             return
                 Values.Count == values.Length &&
                 Values.All(value => values.Contains(value));
