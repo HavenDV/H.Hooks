@@ -25,7 +25,7 @@ namespace H.Hooks
         /// <summary>
         /// Returns <see langword="true"/> if thread is started.
         /// </summary>
-        public bool IsStarted => Thread != null;
+        public bool IsStarted { get; set; }
 
         /// <summary>
         /// See <see cref="Handling"/>.
@@ -121,11 +121,13 @@ namespace H.Hooks
                     ThreadId = Kernel32.GetCurrentThreadId();
 
                     User32.PeekMessage(
-                        out _, 
+                        out _,
                         -1, 
                         0,
                         0, 
                         PM.NOREMOVE);
+
+                    IsStarted = true;
 
                     var handle = User32.SetWindowsHookEx(Type, Delegate, 0, 0).Check();
 
@@ -177,9 +179,15 @@ namespace H.Hooks
                 return;
             }
 
+            while(!IsStarted)
+            {
+                Thread.Sleep(1);
+            }
+
             User32.PostThreadMessage(ThreadId, WM.QUIT, 0, 0).Check();
             Thread?.Join();
             Thread = null;
+            IsStarted = false;
         }
 
         /// <summary>

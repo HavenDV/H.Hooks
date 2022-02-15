@@ -21,7 +21,7 @@ using var mouseHook = new LowLevelMouseHook
 keyboardHook.Start();
 mouseHook.Start();
 
-while (Console.ReadKey(false).Key != ConsoleKey.Escape)
+Console.WriteLine("Press any key combination or `Escape` to exit.");
+while (Console.ReadKey(true).Key != ConsoleKey.Escape)
 {
-    await Task.Delay(TimeSpan.FromMilliseconds(1)).ConfigureAwait(false);
 }
