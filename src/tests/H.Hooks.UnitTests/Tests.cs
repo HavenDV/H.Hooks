@@ -4,10 +4,9 @@ namespace H.Hooks.UnitTests;
 public class Tests
 {
     [TestMethod]
-    public async Task DelayTest()
+    public void KeysTest()
     {
-        using var source = new CancellationTokenSource(TimeSpan.FromSeconds(5));
-
-        await Task.Delay(TimeSpan.FromSeconds(1), source.Token);
+        new Keys(Key.Escape, Key.Control).Are(Key.Control, Key.Escape).Should().BeTrue();
+        (new Keys(Key.Escape, Key.Control) == new Keys(Key.Control, Key.Escape)).Should().BeTrue();
     }
 }

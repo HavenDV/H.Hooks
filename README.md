@@ -38,6 +38,11 @@ mouseHook.Down += (_, args) => Console.WriteLine($"{nameof(mouseHook.Down)}: {ar
 mouseHook.Move += (_, args) => Console.WriteLine($"{nameof(mouseHook.Move)}: {args}");
 
 mouseHook.Start();
+
+// Check keys
+if (args.Keys.Are(Key.Control, Key.Escape)) {
+	// Exit?
+}
 ```
 
 ### Interception of input and cancellation

@@ -118,6 +118,17 @@
         /// 
         /// </summary>
         /// <returns></returns>
+        public bool Are(params Key[] values!!)
+        {
+            return
+                Values.Count == values.Length &&
+                Values.All(value => values.Contains(value));
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public override string ToString()
         {
             return string.Join("+", Values
