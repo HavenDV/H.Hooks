@@ -55,7 +55,9 @@ namespace H.Hooks.Core.Interop
         /// <returns></returns>
         public static T ToStructure<T>(nint ptr) where T : struct
         {
-            return (T)Marshal.PtrToStructure(ptr, typeof(T));
+            return
+                (T?)Marshal.PtrToStructure(ptr, typeof(T)) ?? 
+                throw new InvalidOperationException($"{nameof(Marshal.PtrToStructure)} returns null.");
         }
     }
 }

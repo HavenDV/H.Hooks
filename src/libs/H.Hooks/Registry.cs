@@ -12,6 +12,12 @@ namespace H.Hooks
         /// 
         /// </summary>
         /// <returns></returns>
+#if NET5_0_OR_GREATER
+        [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
         public static TimeSpan GetDoubleClickSpeed()
         {
             using var key = Microsoft.Win32.Registry.CurrentUser
