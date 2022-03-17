@@ -1,5 +1,4 @@
 ﻿using H.Hooks;
-using H.Tests.Extensions;
 
 using var keyboardHook = new LowLevelKeyboardHook
 {
@@ -8,7 +7,15 @@ using var keyboardHook = new LowLevelKeyboardHook
     IsLeftRightGranularity = true,
     IsExtendedMode = true,
     HandleModifierKeys = true,
-}.WithEventLogging();
+};
+keyboardHook.Up += static (_, args) =>
+{
+    Console.WriteLine($"{nameof(keyboardHook)}.{nameof(keyboardHook.Up)}: All keys: {args.Keys}. Current key: {args.CurrentKey}");
+};
+keyboardHook.Down += static (_, args) =>
+{
+    Console.WriteLine($"{nameof(keyboardHook)}.{nameof(keyboardHook.Down)}: All keys: {args.Keys}. Current key: {args.CurrentKey}");
+};
 using var mouseHook = new LowLevelMouseHook
 {
     Handling = true,
@@ -16,7 +23,15 @@ using var mouseHook = new LowLevelMouseHook
     IsLeftRightGranularity = true,
     IsCapsLock = true,
     IsExtendedMode = true,
-}.WithEventLogging();
+};
+mouseHook.Up += static (_, args) =>
+{
+    Console.WriteLine($"{nameof(mouseHook)}.{nameof(mouseHook.Up)}: All keys: {args.Keys}. Current key: {args.CurrentKey}");
+};
+mouseHook.Down += static (_, args) =>
+{
+    Console.WriteLine($"{nameof(mouseHook)}.{nameof(mouseHook.Down)}: All keys: {args.Keys}. Current key: {args.CurrentKey}");
+};
 
 keyboardHook.Start();
 mouseHook.Start();

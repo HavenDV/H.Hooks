@@ -47,12 +47,13 @@ namespace H.Hooks
 
         /// <summary>Initializes a new instance of the <see cref="MouseEventArgs" /> class.</summary>
         /// <param name="keys"></param>
+        /// <param name="currentKey"></param>
         /// <param name="isDoubleClick"></param>
         /// <param name="x">The x-coordinate of a mouse click, in pixels.</param>
         /// <param name="y">The y-coordinate of a mouse click, in pixels.</param>
         /// <param name="delta">A signed count of the number of detents the wheel has rotated.</param>
-        public MouseEventArgs(int x, int y, int delta, bool isDoubleClick, params Key[] keys) : 
-            base(keys) 
+        internal MouseEventArgs(int x, int y, int delta, bool isDoubleClick, Keys keys, Key currentKey) : 
+            base(keys, currentKey) 
         {
             Position = new Point(x, y);
             Delta = delta;

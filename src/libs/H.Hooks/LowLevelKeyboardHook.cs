@@ -128,7 +128,8 @@ namespace H.Hooks
                     )
             );
 
-            var args = new KeyboardEventArgs(keys.Distinct().ToArray());
+            var newKeys = new Keys(keys.Distinct().ToArray());
+            var args = new KeyboardEventArgs(newKeys, mainKey);
             var isKeyDown = value.Flags >> 7 == 0;
             if (isKeyDown)
             {

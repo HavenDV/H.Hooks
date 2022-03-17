@@ -255,12 +255,14 @@ namespace H.Hooks
                 );
             }
 
+            var newKeys = new Keys(keys.ToArray());
             var args = new MouseEventArgs(
                 value.Point.X,
                 value.Point.Y,
                 mouseDelta,
                 isDoubleClick,
-                keys.ToArray());
+                newKeys,
+                key);
 
             if (mouseUp)
             {

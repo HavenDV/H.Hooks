@@ -11,9 +11,14 @@ namespace H.Hooks
         #region Properties
 
         /// <summary>
-        /// 
+        /// All keys.
         /// </summary>
         public Keys Keys { get; }
+
+        /// <summary>
+        /// Current key.
+        /// </summary>
+        public Key CurrentKey { get; }
 
         /// <summary>
         /// Set this property to <see langword="true"/> inside
@@ -26,9 +31,10 @@ namespace H.Hooks
 
         #region Constructors
 
-        internal KeyboardEventArgs(params Key[] keys)
+        internal KeyboardEventArgs(Keys keys, Key currentKey)
         {
-            Keys = new Keys(keys);
+            Keys = keys;
+            CurrentKey = currentKey;
         }
 
         #endregion
