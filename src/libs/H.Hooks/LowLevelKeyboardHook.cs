@@ -8,7 +8,7 @@ namespace H.Hooks
     /// 
     /// </summary>
 #if NET5_0_OR_GREATER
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+    [System.Runtime.Versioning.SupportedOSPlatform("windows5.1.2600")]
 #elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
 #else
 #error Target Framework is not supported
@@ -54,7 +54,7 @@ namespace H.Hooks
         /// </summary>
         public bool IsCapsLock { get; set; }
 
-        private Tuple<uint, uint, uint, nint, bool>? LastState { get; set; }
+        private Tuple<uint, KBDLLHOOKSTRUCT_FLAGS, uint, nuint, bool>? LastState { get; set; }
 
         #endregion
 
@@ -87,7 +87,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public LowLevelKeyboardHook() : base(WH.KEYBOARD_LL)
+        public LowLevelKeyboardHook() : base(WINDOWS_HOOK_ID.WH_KEYBOARD_LL)
         {
         }
 
@@ -102,21 +102,21 @@ namespace H.Hooks
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        protected override bool InternalCallback(int nCode, nint wParam, nint lParam)
+        internal override bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
         {
-            var value = InteropUtilities.ToStructure<KeyboardHookStruct>(lParam);
+            var value = InteropUtilities.ToStructure<KBDLLHOOKSTRUCT>(lParam);
             if (OneUpEvent &&
                 LastState != null &&
-                LastState.Item1 == value.VirtualKeyCode &&
-                LastState.Item2 == value.Flags &&
-                LastState.Item3 == value.ScanCode &&
-                LastState.Item4 == value.ExtraInfo)
+                LastState.Item1 == value.vkCode &&
+                LastState.Item2 == value.flags &&
+                LastState.Item3 == value.scanCode &&
+                LastState.Item4 == value.dwExtraInfo)
             {
                 return LastState.Item5;
             }
 
             var keys = new List<Key>();
-            var mainKey = (Key)value.VirtualKeyCode;
+            var mainKey = (Key)value.vkCode;
             keys.Add(mainKey);
 
             keys.AddRange(
@@ -130,7 +130,7 @@ namespace H.Hooks
 
             var newKeys = new Keys(keys.Distinct().ToArray());
             var args = new KeyboardEventArgs(newKeys, mainKey);
-            var isKeyDown = value.Flags >> 7 == 0;
+            var isKeyDown = !value.flags.HasFlag(KBDLLHOOKSTRUCT_FLAGS.LLKHF_UP);
             if (isKeyDown)
             {
                 OnDown(args);
@@ -159,10 +159,10 @@ namespace H.Hooks
             if (OneUpEvent)
             {
                 LastState = Tuple.Create(
-                    value.VirtualKeyCode,
-                    value.Flags,
-                    value.ScanCode,
-                    value.ExtraInfo,
+                    value.vkCode,
+                    value.flags,
+                    value.scanCode,
+                    value.dwExtraInfo,
                     isHandled);
             }
 

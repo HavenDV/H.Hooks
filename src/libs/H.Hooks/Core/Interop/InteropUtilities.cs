@@ -38,6 +38,21 @@ namespace H.Hooks.Core.Interop
         }
 
         /// <summary>
+        /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
+        /// if value is <see langword="false"/>.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <exception cref="Win32Exception"></exception>
+        /// <returns></returns>
+        public static void Check(this BOOL value)
+        {
+            if (!value)
+            {
+                ThrowWin32Exception();
+            }
+        }
+
+        /// <summary>
         /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>.
         /// </summary>
         /// <exception cref="Win32Exception"></exception>

@@ -8,7 +8,7 @@ namespace H.Hooks
     /// 
     /// </summary>
 #if NET5_0_OR_GREATER
-    [System.Runtime.Versioning.SupportedOSPlatform("windows")]
+    [System.Runtime.Versioning.SupportedOSPlatform("windows5.1.2600")]
 #elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
 #else
 #error Target Framework is not supported
@@ -125,7 +125,7 @@ namespace H.Hooks
         /// <summary>
         /// 
         /// </summary>
-        public LowLevelMouseHook() : base(WH.MOUSE_LL)
+        public LowLevelMouseHook() : base(WINDOWS_HOOK_ID.WH_MOUSE_LL)
         {
             DoubleClickSpeed = Registry.GetDoubleClickSpeed();
         }
@@ -141,15 +141,15 @@ namespace H.Hooks
         /// <param name="wParam"></param>
         /// <param name="lParam"></param>
         /// <returns></returns>
-        protected override bool InternalCallback(int nCode, nint wParam, nint lParam)
+        internal override bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
         {
-            if (wParam == WM.MOUSEMOVE &&
+            if ((uint)wParam.Value == PInvoke.WM_MOUSEMOVE &&
                 !GenerateMouseMoveEvents)
             {
                 return false;
             }
 
-            var value = InteropUtilities.ToStructure<MouseLowLevelHookStruct>(lParam);
+            var value = InteropUtilities.ToStructure<MSLLHOOKSTRUCT>(lParam);
             
             //detect button clicked
             var key = Key.MouseNone;
@@ -158,77 +158,86 @@ namespace H.Hooks
             var mouseDown = false;
             var mouseUp = false;
             var mouseMove = false;
-            var specialKey = (value.MouseData >> 16) switch
+            //var specialKey = Key.MouseNone;
+            //if (value.mouseData.HasFlag(MOUSEHOOKSTRUCTEX_MOUSE_DATA.XBUTTON1))
+            //{
+            //    specialKey = Key.MouseXButton1;
+            //}
+            //else if (value.mouseData.HasFlag(MOUSEHOOKSTRUCTEX_MOUSE_DATA.XBUTTON2))
+            //{
+            //    specialKey = Key.MouseXButton2;
+            //}
+            var specialKey = (((uint)value.mouseData) >> 16) switch
             {
                 1 => Key.MouseXButton1,
                 2 => Key.MouseXButton2,
                 _ => Key.MouseNone,
             };
-
-            switch (wParam)
+            
+            switch ((uint)wParam.Value)
             {
-                case WM.LBUTTONDOWN:
+                case PInvoke.WM_LBUTTONDOWN:
                     mouseDown = true;
                     key = Key.MouseLeft;
                     break;
-                case WM.LBUTTONUP:
+                case PInvoke.WM_LBUTTONUP:
                     mouseUp = true;
                     key = Key.MouseLeft;
                     break;
-                case WM.LBUTTONDBLCLK:
+                case PInvoke.WM_LBUTTONDBLCLK:
                     key = Key.MouseLeft;
                     isDoubleClick = true;
                     break;
 
-                case WM.RBUTTONDOWN:
+                case PInvoke.WM_RBUTTONDOWN:
                     mouseDown = true;
                     key = Key.MouseRight;
                     break;
-                case WM.RBUTTONUP:
+                case PInvoke.WM_RBUTTONUP:
                     mouseUp = true;
                     key = Key.MouseRight;
                     break;
-                case WM.RBUTTONDBLCLK:
+                case PInvoke.WM_RBUTTONDBLCLK:
                     key = Key.MouseRight;
                     isDoubleClick = true;
                     break;
 
-                case WM.MBUTTONDOWN:
+                case PInvoke.WM_MBUTTONDOWN:
                     mouseDown = true;
                     key = Key.MouseMiddle;
                     break;
-                case WM.MBUTTONUP:
+                case PInvoke.WM_MBUTTONUP:
                     mouseUp = true;
                     key = Key.MouseMiddle;
                     break;
-                case WM.MBUTTONDBLCLK:
+                case PInvoke.WM_MBUTTONDBLCLK:
                     key = Key.MouseMiddle;
                     isDoubleClick = true;
                     break;
 
-                case WM.XBUTTONDOWN:
-                case WM.NCXBUTTONDOWN:
+                case PInvoke.WM_XBUTTONDOWN:
+                case PInvoke.WM_NCXBUTTONDOWN:
                     mouseDown = true;
                     key = specialKey;
                     break;
-                case WM.XBUTTONUP:
-                case WM.NCXBUTTONUP:
+                case PInvoke.WM_XBUTTONUP:
+                case PInvoke.WM_NCXBUTTONUP:
                     mouseUp = true;
                     key = specialKey;
                     break;
-                case WM.XBUTTONDBLCLK:
-                case WM.NCXBUTTONDBLCLK:
+                case PInvoke.WM_XBUTTONDBLCLK:
+                case PInvoke.WM_NCXBUTTONDBLCLK:
                     key = specialKey;
                     isDoubleClick = true;
                     break;
 
-                case WM.MOUSEWHEEL:
-                case WM.MOUSEWHEELALT:
-                    mouseDelta = (short)((value.MouseData >> 16) & 0xffff);
+                case PInvoke.WM_MOUSEWHEEL:
+                case PInvoke.WM_MOUSEHWHEEL:
+                    mouseDelta = (short)((((uint)value.mouseData) >> 16) & 0xffff);
                     key = Key.MouseWheel;
                     break;
 
-                case WM.MOUSEMOVE:
+                case PInvoke.WM_MOUSEMOVE:
                     mouseMove = true;
                     break;
 
@@ -257,8 +266,8 @@ namespace H.Hooks
 
             var newKeys = new Keys(keys.ToArray());
             var args = new MouseEventArgs(
-                value.Point.X,
-                value.Point.Y,
+                value.pt.x,
+                value.pt.y,
                 mouseDelta,
                 isDoubleClick,
                 newKeys,

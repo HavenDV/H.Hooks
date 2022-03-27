@@ -6,6 +6,12 @@ namespace H.Hooks
     /// <summary>
     /// 
     /// </summary>
+#if NET5_0_OR_GREATER
+    [System.Runtime.Versioning.SupportedOSPlatform("windows5.0")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
     public static class Keyboard
     {
         #region Public methods
@@ -18,7 +24,7 @@ namespace H.Hooks
         /// <param name="isLeftRightGranularity"></param>
         /// <param name="isExtendedMode"></param>
         /// <returns></returns>
-        public static IEnumerable<Key> GetPressedKeys(
+        public static unsafe IEnumerable<Key> GetPressedKeys(
             bool useKeyboardState = true,
             bool isCapsLock = false,
             bool isLeftRightGranularity = false,
@@ -30,10 +36,18 @@ namespace H.Hooks
             if (useKeyboardState)
             {
                 // Updates internal buffer.
-                User32.GetKeyState((int)Key.Shift);
+                PInvoke.GetKeyState((int)Key.Shift);
 
                 buffer = new byte[256];
-                User32.GetKeyboardState(buffer).Check();
+                fixed (byte* bufferPtr = new byte[256])
+                {
+                    PInvoke.GetKeyboardState(bufferPtr).Check();
+
+                    for (var i = 0; i < 256; i++)
+                    {
+                        buffer[i] = bufferPtr[i];
+                    }
+                }
             }
 
             CheckUpAndAdd(keys, Key.LWin, buffer);
@@ -115,7 +129,7 @@ namespace H.Hooks
                 return;
             }
 
-            var state = buffer?[(int)key] ?? User32.GetKeyState((int)key);
+            var state = buffer?[(int)key] ?? PInvoke.GetKeyState((int)key);
             if (Convert.ToBoolean(state & kf))
             {
                 keys.Add(key);

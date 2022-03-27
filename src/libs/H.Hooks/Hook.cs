@@ -3,202 +3,211 @@ using H.Hooks.Core.Interop;
 using H.Hooks.Core.Interop.WinUser;
 using H.Hooks.Extensions;
 
-namespace H.Hooks
+namespace H.Hooks;
+
+/// <summary>
+/// Base class for all hooks.
+/// </summary>
+#if NET5_0_OR_GREATER
+[System.Runtime.Versioning.SupportedOSPlatform("windows5.1.2600")]
+#elif NETSTANDARD2_0_OR_GREATER || NET451_OR_GREATER
+#else
+#error Target Framework is not supported
+#endif
+public abstract class Hook : IDisposable
 {
+    #region Properties
+
     /// <summary>
-    /// Base class for all hooks.
+    /// Allows you to intercept input for other applications and cancel events (via args.IsHandled = true). <br/>
+    /// Do not enable this unless you need it. <br/>
+    /// When enabled, overrides the automatic dispatch of events to the ThreadPool
+    /// and may cause performance issues with any slow handlers. In this case,
+    /// you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
+    /// when handling events (after set up args.IsHandled = true).
     /// </summary>
-    public abstract class Hook : IDisposable
+    public bool Handling { get; set; }
+
+    /// <summary>
+    /// Returns <see langword="true"/> if thread is started.
+    /// </summary>
+    public bool IsStarted { get; set; }
+
+    /// <summary>
+    /// See <see cref="Handling"/>.
+    /// </summary>
+    protected bool PushToThreadPool => !Handling;
+
+    private WINDOWS_HOOK_ID Type { get; }
+    private Thread? Thread { get; set; }
+    private uint ThreadId { get; set; }
+    private HOOKPROC Delegate { get; }
+
+    #endregion
+
+    #region Events
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public event EventHandler<Exception>? ExceptionOccurred;
+
+    private void OnExceptionOccurred(Exception value)
     {
-        #region Properties
+        ExceptionOccurred?.Invoke(this, value, PushToThreadPool);
+    }
 
-        /// <summary>
-        /// Allows you to intercept input for other applications and cancel events (via args.IsHandled = true). <br/>
-        /// Do not enable this unless you need it. <br/>
-        /// When enabled, overrides the automatic dispatch of events to the ThreadPool
-        /// and may cause performance issues with any slow handlers. In this case,
-        /// you need to use <see cref="ThreadPool.QueueUserWorkItem(WaitCallback)"/>
-        /// when handling events (after set up args.IsHandled = true).
-        /// </summary>
-        public bool Handling { get; set; }
+    #endregion
 
-        /// <summary>
-        /// Returns <see langword="true"/> if thread is started.
-        /// </summary>
-        public bool IsStarted { get; set; }
+    #region Constructors
 
-        /// <summary>
-        /// See <see cref="Handling"/>.
-        /// </summary>
-        protected bool PushToThreadPool => !Handling;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="type"></param>
+    internal Hook(WINDOWS_HOOK_ID type)
+    {
+        Type = type;
+        Delegate = Callback;
+    }
 
-        private int Type { get; }
-        private Thread? Thread { get; set; }
-        private uint ThreadId { get; set; }
-        private HookProc Delegate { get; }
+    #endregion
 
-        #endregion
+    #region Protected methods
 
-        #region Events
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="nCode"></param>
+    /// <param name="wParam"></param>
+    /// <param name="lParam"></param>
+    /// <returns></returns>
+    internal abstract bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        public event EventHandler<Exception>? ExceptionOccurred;
+    #endregion
 
-        private void OnExceptionOccurred(Exception value)
+    #region Private methods
+
+    private LRESULT Callback(int nCode, WPARAM wParam, LPARAM lParam)
+    {
+        try
         {
-            ExceptionOccurred?.Invoke(this, value, PushToThreadPool);
+            if (nCode >= 0 && InternalCallback(nCode, wParam, lParam))
+            {
+                return new LRESULT(-1);
+            }
+        }
+        catch (Exception exception)
+        {
+            OnExceptionOccurred(exception);
         }
 
-        #endregion
+#pragma warning disable CA2000 // Dispose objects before losing scope
+        return PInvoke.CallNextHookEx(
+            hhk: new SafeWaitHandle(IntPtr.Zero, false),
+            nCode: nCode,
+            wParam: wParam,
+            lParam: lParam);
+#pragma warning restore CA2000 // Dispose objects before losing scope
+    }
 
-        #region Constructors
+    #endregion
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="type"></param>
-        protected internal Hook(int type)
+    #region Public methods
+
+    /// <summary>
+    /// Starts hook thread.
+    /// </summary>
+    /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
+    public unsafe void Start()
+    {
+        if (Thread != null)
         {
-            Type = type;
-            Delegate = Callback;
+            return;
         }
 
-        #endregion
-
-        #region Protected methods
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="nCode"></param>
-        /// <param name="wParam"></param>
-        /// <param name="lParam"></param>
-        /// <returns></returns>
-        protected abstract bool InternalCallback(int nCode, nint wParam, nint lParam);
-
-        #endregion
-
-        #region Private methods
-
-        private nint Callback(int nCode, nint wParam, nint lParam)
+        Thread = new Thread(() =>
         {
             try
             {
-                if (nCode >= 0 && InternalCallback(nCode, wParam, lParam))
+                ThreadId = PInvoke.GetCurrentThreadId();
+
+                var msg = new MSG();
+                PInvoke.PeekMessage(
+                    lpMsg: &msg,
+                    hWnd: new HWND(-1),
+                    wMsgFilterMin: 0,
+                    wMsgFilterMax: 0,
+                    wRemoveMsg: PEEK_MESSAGE_REMOVE_TYPE.PM_NOREMOVE);
+
+                IsStarted = true;
+
+                using var handle = PInvoke.SetWindowsHookEx(
+                    idHook: Type,
+                    lpfn: Delegate,
+                    hmod: new SafeWaitHandle(IntPtr.Zero, false),
+                    dwThreadId: 0);
+
+                while (true)
                 {
-                    return -1;
+                    PInvoke.GetMessage(
+                        lpMsg: &msg,
+                        hWnd: new HWND(-1),
+                        wMsgFilterMin: 0,
+                        wMsgFilterMax: 0).Check();
+
+                    if (msg.message == PInvoke.WM_QUIT)
+                    {
+                        break;
+                    }
+
+                    _ = PInvoke.DefWindowProc(
+                        hWnd: msg.hwnd,
+                        Msg: msg.message,
+                        wParam: msg.wParam,
+                        lParam: msg.lParam);
                 }
             }
             catch (Exception exception)
             {
                 OnExceptionOccurred(exception);
             }
-
-            return User32.CallNextHookEx(0, nCode, wParam, lParam);
-        }
-
-        #endregion
-
-        #region Public methods
-
-        /// <summary>
-        /// Starts hook thread.
-        /// </summary>
-        /// <exception cref="Win32Exception">If SetWindowsHookEx return error code</exception>
-        public void Start()
+        })
         {
-            if (Thread != null)
-            {
-                return;
-            }
-
-            Thread = new Thread(() =>
-            {
-                try
-                {
-                    ThreadId = Kernel32.GetCurrentThreadId();
-
-                    User32.PeekMessage(
-                        out _,
-                        -1, 
-                        0,
-                        0, 
-                        PM.NOREMOVE);
-
-                    IsStarted = true;
-
-                    var handle = User32.SetWindowsHookEx(Type, Delegate, 0, 0).Check();
-
-                    try
-                    {
-                        while (true)
-                        {
-                            var result = User32.GetMessage(
-                                out var msg,
-                                -1,
-                                0,
-                                0);
-                            if (result == -1)
-                            {
-                                InteropUtilities.ThrowWin32Exception();
-                            }
-
-                            if (msg.msg == WM.QUIT)
-                            {
-                                break;
-                            }
-
-                            User32.DefWindowProc(msg.handle, msg.msg, msg.wParam, msg.lParam);
-                        }
-                    }
-                    finally
-                    {
-                        User32.UnhookWindowsHookEx(handle).Check();
-                    }
-                }
-                catch (Exception exception)
-                {
-                    OnExceptionOccurred(exception);
-                }
-            })
-            {
-                IsBackground = true,
-            };
-            Thread.Start();
-        }
-
-        /// <summary>
-        /// Stops hook thread.
-        /// </summary>
-        public void Stop()
-        {
-            if (Thread == null)
-            {
-                return;
-            }
-
-            while(!IsStarted)
-            {
-                Thread.Sleep(1);
-            }
-
-            User32.PostThreadMessage(ThreadId, WM.QUIT, 0, 0).Check();
-            Thread?.Join();
-            Thread = null;
-            IsStarted = false;
-        }
-
-        /// <summary>
-        /// Dispose internal system hook resources.
-        /// </summary>
-        public void Dispose()
-        {
-            Stop();
-            GC.SuppressFinalize(this);
-        }
-
-        #endregion
+            IsBackground = true,
+        };
+        Thread.Start();
     }
+
+    /// <summary>
+    /// Stops hook thread.
+    /// </summary>
+    public void Stop()
+    {
+        if (Thread == null)
+        {
+            return;
+        }
+
+        while(!IsStarted)
+        {
+            Thread.Sleep(1);
+        }
+
+        PInvoke.PostThreadMessage(ThreadId, PInvoke.WM_QUIT, default, default).Check();
+        Thread?.Join();
+        Thread = null;
+        IsStarted = false;
+    }
+
+    /// <summary>
+    /// Dispose internal system hook resources.
+    /// </summary>
+    public void Dispose()
+    {
+        Stop();
+        GC.SuppressFinalize(this);
+    }
+
+    #endregion
 }
