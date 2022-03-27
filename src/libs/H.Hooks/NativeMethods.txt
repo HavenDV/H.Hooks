@@ -8,7 +8,6 @@ PeekMessage
 GetKeyboardState
 GetKeyState
 CallNextHookEx
-UnhookWindowsHookEx
 SetWindowsHookEx
 KBDLLHOOKSTRUCT
 MSLLHOOKSTRUCT
