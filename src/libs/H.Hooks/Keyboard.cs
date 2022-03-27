@@ -39,14 +39,9 @@ public static class Keyboard
             PInvoke.GetKeyState((int)Key.Shift);
 
             buffer = new byte[256];
-            fixed (byte* bufferPtr = new byte[256])
+            fixed (byte* bufferPtr = buffer)
             {
                 PInvoke.GetKeyboardState(bufferPtr).Check();
-
-                for (var i = 0; i < 256; i++)
-                {
-                    buffer[i] = bufferPtr[i];
-                }
             }
         }
 
