@@ -101,13 +101,11 @@ public abstract class Hook : IDisposable
             OnExceptionOccurred(exception);
         }
 
-#pragma warning disable CA2000 // Dispose objects before losing scope
         return PInvoke.CallNextHookEx(
-            hhk: new SafeWaitHandle(IntPtr.Zero, false),
+            hhk: null,
             nCode: nCode,
             wParam: wParam,
             lParam: lParam);
-#pragma warning restore CA2000 // Dispose objects before losing scope
     }
 
     #endregion
@@ -144,7 +142,7 @@ public abstract class Hook : IDisposable
                 using var handle = PInvoke.SetWindowsHookEx(
                     idHook: Type,
                     lpfn: Delegate,
-                    hmod: new SafeWaitHandle(IntPtr.Zero, false),
+                    hmod: null,
                     dwThreadId: 0);
 
                 while (true)
