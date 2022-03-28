@@ -101,21 +101,21 @@ public sealed class LowLevelKeyboardHook : Hook
     /// <param name="wParam"></param>
     /// <param name="lParam"></param>
     /// <returns></returns>
-    internal override bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
+    internal override unsafe bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
     {
-        var value = InteropUtilities.ToStructure<KBDLLHOOKSTRUCT>(lParam);
+        var value = (KBDLLHOOKSTRUCT*)lParam.Value;
         if (OneUpEvent &&
             LastState != null &&
-            LastState.Item1 == value.vkCode &&
-            LastState.Item2 == value.flags &&
-            LastState.Item3 == value.scanCode &&
-            LastState.Item4 == value.dwExtraInfo)
+            LastState.Item1 == value->vkCode &&
+            LastState.Item2 == value->flags &&
+            LastState.Item3 == value->scanCode &&
+            LastState.Item4 == value->dwExtraInfo)
         {
             return LastState.Item5;
         }
 
         var keys = new List<Key>();
-        var mainKey = (Key)value.vkCode;
+        var mainKey = (Key)value->vkCode;
         keys.Add(mainKey);
 
         keys.AddRange(
@@ -129,7 +129,7 @@ public sealed class LowLevelKeyboardHook : Hook
 
         var newKeys = new Keys(keys.Distinct().ToArray());
         var args = new KeyboardEventArgs(newKeys, mainKey);
-        var isKeyDown = !value.flags.HasFlag(KBDLLHOOKSTRUCT_FLAGS.LLKHF_UP);
+        var isKeyDown = !value->flags.HasFlag(KBDLLHOOKSTRUCT_FLAGS.LLKHF_UP);
         if (isKeyDown)
         {
             OnDown(args);
@@ -158,10 +158,10 @@ public sealed class LowLevelKeyboardHook : Hook
         if (OneUpEvent)
         {
             LastState = Tuple.Create(
-                value.vkCode,
-                value.flags,
-                value.scanCode,
-                value.dwExtraInfo,
+                value->vkCode,
+                value->flags,
+                value->scanCode,
+                value->dwExtraInfo,
                 isHandled);
         }
 

@@ -61,17 +61,4 @@ internal static class InteropUtilities
     {
         throw new Win32Exception(Marshal.GetLastWin32Error());
     }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="ptr"></param>
-    /// <returns></returns>
-    public static T ToStructure<T>(nint ptr) where T : struct
-    {
-        return
-            (T?)Marshal.PtrToStructure(ptr, typeof(T)) ?? 
-            throw new InvalidOperationException($"{nameof(Marshal.PtrToStructure)} returns null.");
-    }
 }

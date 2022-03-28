@@ -140,7 +140,7 @@ public sealed class LowLevelMouseHook : Hook
     /// <param name="wParam"></param>
     /// <param name="lParam"></param>
     /// <returns></returns>
-    internal override bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
+    internal override unsafe bool InternalCallback(int nCode, WPARAM wParam, LPARAM lParam)
     {
         if ((uint)wParam.Value == PInvoke.WM_MOUSEMOVE &&
             !GenerateMouseMoveEvents)
@@ -148,7 +148,7 @@ public sealed class LowLevelMouseHook : Hook
             return false;
         }
 
-        var value = InteropUtilities.ToStructure<MSLLHOOKSTRUCT>(lParam);
+        var value = (MSLLHOOKSTRUCT*)lParam.Value;
         
         //detect button clicked
         var key = Key.MouseNone;
@@ -166,7 +166,7 @@ public sealed class LowLevelMouseHook : Hook
         //{
         //    specialKey = Key.MouseXButton2;
         //}
-        var specialKey = (((uint)value.mouseData) >> 16) switch
+        var specialKey = (((uint)value->mouseData) >> 16) switch
         {
             1 => Key.MouseXButton1,
             2 => Key.MouseXButton2,
@@ -232,7 +232,7 @@ public sealed class LowLevelMouseHook : Hook
 
             case PInvoke.WM_MOUSEWHEEL:
             case PInvoke.WM_MOUSEHWHEEL:
-                mouseDelta = (short)((((uint)value.mouseData) >> 16) & 0xffff);
+                mouseDelta = (short)((((uint)value->mouseData) >> 16) & 0xffff);
                 key = Key.MouseWheel;
                 break;
 
@@ -265,8 +265,8 @@ public sealed class LowLevelMouseHook : Hook
 
         var newKeys = new Keys(keys.ToArray());
         var args = new MouseEventArgs(
-            value.pt.x,
-            value.pt.y,
+            value->pt.x,
+            value->pt.y,
             mouseDelta,
             isDoubleClick,
             newKeys,
