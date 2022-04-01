@@ -36,12 +36,12 @@ public static class Keyboard
         if (useKeyboardState)
         {
             // Updates internal buffer.
-            PInvoke.GetKeyState((int)Key.Shift);
+            _ = PInvoke.GetKeyState((int)Key.Shift);
 
             buffer = new byte[256];
             fixed (byte* bufferPtr = buffer)
             {
-                PInvoke.GetKeyboardState(bufferPtr).Check();
+                _ = PInvoke.GetKeyboardState(bufferPtr).EnsureNonZero();
             }
         }
 

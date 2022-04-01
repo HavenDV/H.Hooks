@@ -130,7 +130,7 @@ public abstract class Hook : IDisposable
                 ThreadId = PInvoke.GetCurrentThreadId();
 
                 var msg = new MSG();
-                PInvoke.PeekMessage(
+                _ = PInvoke.PeekMessage(
                     lpMsg: &msg,
                     hWnd: new HWND(-1),
                     wMsgFilterMin: 0,
@@ -147,12 +147,11 @@ public abstract class Hook : IDisposable
 
                 while (true)
                 {
-                    PInvoke.GetMessage(
+                    _ = PInvoke.GetMessage(
                         lpMsg: &msg,
                         hWnd: new HWND(-1),
                         wMsgFilterMin: 0,
-                        wMsgFilterMax: 0).Check();
-
+                        wMsgFilterMax: 0).EnsureNonMinusOne();
                     if (msg.message == PInvoke.WM_QUIT)
                     {
                         break;
@@ -191,7 +190,11 @@ public abstract class Hook : IDisposable
             Thread.Sleep(1);
         }
 
-        PInvoke.PostThreadMessage(ThreadId, PInvoke.WM_QUIT, default, default).Check();
+        _ = PInvoke.PostThreadMessage(
+            idThread: ThreadId,
+            Msg: PInvoke.WM_QUIT,
+            wParam: default,
+            lParam: default).EnsureNonZero();
         Thread?.Join();
         Thread = null;
         IsStarted = false;

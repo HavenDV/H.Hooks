@@ -1,64 +1,28 @@
-﻿using System.ComponentModel;
-using System.Runtime.InteropServices;
+﻿using System.Runtime.InteropServices;
 
 namespace H.Hooks.Core.Interop;
 
 internal static class InteropUtilities
 {
-    /// <summary>
-    /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
-    /// if ptr is 0.
-    /// </summary>
-    /// <param name="ptr"></param>
-    /// <exception cref="Win32Exception"></exception>
-    /// <returns>Returns input ptr.</returns>
-    public static nint Check(this nint ptr)
+    /// <exception cref="COMException"></exception>
+    public static BOOL EnsureNonZero(this BOOL value)
     {
-        if (ptr == 0)
+        if (value.Value == 0)
         {
-            ThrowWin32Exception();
+            Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
         }
 
-        return ptr;
+        return value;
     }
 
-    /// <summary>
-    /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
-    /// if value is <see langword="false"/>.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <exception cref="Win32Exception"></exception>
-    /// <returns></returns>
-    public static void Check(this bool value)
+    /// <exception cref="COMException"></exception>
+    public static BOOL EnsureNonMinusOne(this BOOL value)
     {
-        if (!value)
+        if (value.Value == -1)
         {
-            ThrowWin32Exception();
+            Marshal.ThrowExceptionForHR(Marshal.GetHRForLastWin32Error());
         }
-    }
 
-    /// <summary>
-    /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>
-    /// if value is <see langword="false"/>.
-    /// </summary>
-    /// <param name="value"></param>
-    /// <exception cref="Win32Exception"></exception>
-    /// <returns></returns>
-    public static void Check(this BOOL value)
-    {
-        if (!value)
-        {
-            ThrowWin32Exception();
-        }
-    }
-
-    /// <summary>
-    /// Throws <see cref="Win32Exception"/> with <see cref="Marshal.GetLastWin32Error"/>.
-    /// </summary>
-    /// <exception cref="Win32Exception"></exception>
-    /// <returns>It always throws exception.</returns>
-    public static void ThrowWin32Exception()
-    {
-        throw new Win32Exception(Marshal.GetLastWin32Error());
+        return value;
     }
 }
