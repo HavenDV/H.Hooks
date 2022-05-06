@@ -133,7 +133,7 @@ public static class Keyboard
 
     private static void CheckUpAndAdd(ICollection<Key> keys, Key key, byte[]? buffer)
     {
-        CheckAndAdd(keys, key, buffer, buffer != null ? KF.BYTE_UP : KF.UP);
+        CheckAndAdd(keys, key, buffer, buffer != null ? KF.BYTE_UP : (int)PInvoke.KF_UP);
     }
 
     private static void CheckToggledAndAdd(ICollection<Key> keys, Key key, byte[]? buffer)
