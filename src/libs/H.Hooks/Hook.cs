@@ -132,7 +132,7 @@ public abstract class Hook : IDisposable
                 var msg = new MSG();
                 _ = PInvoke.PeekMessage(
                     lpMsg: &msg,
-                    hWnd: new HWND(-1),
+                    hWnd: new HWND(new IntPtr(-1)),
                     wMsgFilterMin: 0,
                     wMsgFilterMax: 0,
                     wRemoveMsg: PEEK_MESSAGE_REMOVE_TYPE.PM_NOREMOVE);
@@ -149,7 +149,7 @@ public abstract class Hook : IDisposable
                 {
                     _ = PInvoke.GetMessage(
                         lpMsg: &msg,
-                        hWnd: new HWND(-1),
+                        hWnd: new HWND(new IntPtr(-1)),
                         wMsgFilterMin: 0,
                         wMsgFilterMax: 0).EnsureNonMinusOne();
                     if (msg.message == PInvoke.WM_QUIT)
