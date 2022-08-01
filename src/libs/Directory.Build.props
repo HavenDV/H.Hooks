@@ -2,10 +2,6 @@
 
   <Import Project="..\Directory.Build.props" />
 
-  <PropertyGroup Label="Common">
-    <InvariantGlobalization>true</InvariantGlobalization>
-  </PropertyGroup>
-
   <PropertyGroup Label="Signing">
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>$(SolutionDir)src\libs\key.snk</AssemblyOriginatorKeyFile>
@@ -18,15 +14,10 @@
   </ItemGroup>
 
   <PropertyGroup Label="Nuget">
-    <BUILD_NUMBER Condition="'$(BUILD_NUMBER)' == ''">1</BUILD_NUMBER>
-    <Version>1.4.$(BUILD_NUMBER)</Version>
-    <PackageReleaseNotes>$(PACKAGE_RELEASE_NOTES)</PackageReleaseNotes>
     <GeneratePackageOnBuild Condition=" '$(Configuration)' == 'Release' ">true</GeneratePackageOnBuild>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <Authors>havendv</Authors>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/HavenDV/H.Hooks</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/HavenDV/H.Hooks</RepositoryUrl>
     <PackageIcon>nuget_icon.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
@@ -34,17 +25,21 @@
   <ItemGroup Label="Nuget">
     <None Include="$(SolutionDir)assets\nuget_icon.png" Pack="true" PackagePath="\"/>
     <None Include="$(SolutionDir)README.md" Pack="true" PackagePath="\"/>
+    <PackageReference Include="ConventionalCommitsGitInfo" Version="0.3.6">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
   </ItemGroup>
-  
-  <PropertyGroup Label="Source Link">
-    <PublishRepositoryUrl>true</PublishRepositoryUrl>
-    <EmbedUntrackedSources>true</EmbedUntrackedSources>
-    <IncludeSymbols>true</IncludeSymbols>
-    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
-  </PropertyGroup>
+
+  <Target Name="SetSemanticVersionSettings" BeforeTargets="SetSemanticVersion">
+    <PropertyGroup>
+      <ConventionalCommitsGitInfo_BaseVersion>1.5.0</ConventionalCommitsGitInfo_BaseVersion>
+      <ConventionalCommitsGitInfo_BaseCommit>0d4d39a6b78590a2434419f8c48bac41480b74bb</ConventionalCommitsGitInfo_BaseCommit>
+    </PropertyGroup>
+  </Target>
   
   <ItemGroup Label="Source Link">
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+    <PackageReference Include="DotNet.ReproducibleBuilds" Version="1.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
