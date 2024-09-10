@@ -265,8 +265,8 @@ public sealed class LowLevelMouseHook : Hook
 
         var newKeys = new Keys(keys.ToArray());
         var args = new MouseEventArgs(
-            value->pt.x,
-            value->pt.y,
+            value->pt.X,
+            value->pt.Y,
             mouseDelta,
             isDoubleClick,
             newKeys,
