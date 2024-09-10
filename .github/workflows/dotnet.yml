@@ -1,12 +1,12 @@
-﻿name: Build, test and publish
+﻿name: Publish
 on:
   push:
     branches:
       - master
 
 jobs:
-  build-test-publish:
-    name: Build, test and publish
+  publish:
+    name: Publish
     uses: HavenDV/workflows/.github/workflows/dotnet_build-test-publish.yml@main
     with:
       os: windows-latest
