@@ -33,6 +33,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "apps", "apps", "{B2D0762A-B
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "H.Hooks.ConsoleApp", "src\apps\H.Hooks.ConsoleApp\H.Hooks.ConsoleApp.csproj", "{EA9A0554-F2FD-4B42-801E-1E4676DEAFBC}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "helpers", "helpers", "{CB314486-E3AD-485C-A5FB-6022868515DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrimmingHelper", "src\helpers\TrimmingHelper\TrimmingHelper.csproj", "{D504F55D-CBD6-4507-96E9-DFFCA918E8A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +59,10 @@ Global
 		{EA9A0554-F2FD-4B42-801E-1E4676DEAFBC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EA9A0554-F2FD-4B42-801E-1E4676DEAFBC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EA9A0554-F2FD-4B42-801E-1E4676DEAFBC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D504F55D-CBD6-4507-96E9-DFFCA918E8A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D504F55D-CBD6-4507-96E9-DFFCA918E8A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D504F55D-CBD6-4507-96E9-DFFCA918E8A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D504F55D-CBD6-4507-96E9-DFFCA918E8A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -64,6 +72,7 @@ Global
 		{F2548AE2-D736-4C21-942F-55C4F592EFF2} = {9CAA231D-7BE1-46C9-ACD6-EB2E569CEBEA}
 		{1CD36EFB-8395-42EB-A908-A6FBBE6D9AAE} = {9CAA231D-7BE1-46C9-ACD6-EB2E569CEBEA}
 		{EA9A0554-F2FD-4B42-801E-1E4676DEAFBC} = {B2D0762A-B0E0-4ECE-841E-0B46088E74D6}
+		{D504F55D-CBD6-4507-96E9-DFFCA918E8A9} = {CB314486-E3AD-485C-A5FB-6022868515DB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1493AEE4-9211-46E9-BFE6-8F629EAC5693}

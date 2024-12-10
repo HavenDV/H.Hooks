@@ -95,7 +95,7 @@ public class Keys
     /// <summary>
     /// 
     /// </summary>
-    public bool IsEmpty => !Values.Any();
+    public bool IsEmpty => Values.Count == 0;
 
     #endregion
 

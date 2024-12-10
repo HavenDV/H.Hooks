@@ -102,7 +102,7 @@ public static class Keyboard
 
     #region Private methods
 
-    private static void ReplaceIfExists(ICollection<Key> keys, Key from, Key to)
+    private static void ReplaceIfExists(List<Key> keys, Key from, Key to)
     {
         if (!keys.Contains(from))
         {
