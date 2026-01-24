@@ -126,9 +126,12 @@ public sealed class LowLevelKeyboardHook : Hook
                 IsExtendedMode
                 )
         );
+        var flags = value->flags;
 
+        var isSimulator =
+            flags.HasFlag(KBDLLHOOKSTRUCT_FLAGS.LLKHF_INJECTED);
         var newKeys = new Keys(keys.Distinct().ToArray());
-        var args = new KeyboardEventArgs(newKeys, mainKey);
+        var args = new KeyboardEventArgs(newKeys, mainKey,isSimulator);
         var isKeyDown = !value->flags.HasFlag(KBDLLHOOKSTRUCT_FLAGS.LLKHF_UP);
         if (isKeyDown)
         {

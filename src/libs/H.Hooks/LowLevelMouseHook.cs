@@ -14,6 +14,12 @@ namespace H.Hooks;
 #endif
 public sealed class LowLevelMouseHook : Hook
 {
+    #region Fields
+
+    public const uint LLMHF_INJECTED = 0x00000001;
+
+    #endregion
+    
     #region Properties
 
     /// <summary>
@@ -262,6 +268,9 @@ public sealed class LowLevelMouseHook : Hook
                 )
             );
         }
+        var flags = value->flags;
+        
+        var isSimulator = (flags & LLMHF_INJECTED) != 0;
 
         var newKeys = new Keys(keys.ToArray());
         var args = new MouseEventArgs(
@@ -270,7 +279,8 @@ public sealed class LowLevelMouseHook : Hook
             mouseDelta,
             isDoubleClick,
             newKeys,
-            key);
+            key,
+            isSimulator);
 
         if (mouseUp)
         {
