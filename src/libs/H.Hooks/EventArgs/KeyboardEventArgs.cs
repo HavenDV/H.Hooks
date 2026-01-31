@@ -20,6 +20,11 @@ public class KeyboardEventArgs : EventArgs
     public Key CurrentKey { get; }
 
     /// <summary>
+    /// Simulator flag
+    /// </summary>
+    public bool IsSimulator { get; }
+
+    /// <summary>
     /// Set this property to <see langword="true"/> inside
     /// your event handler to prevent further processing
     /// of the event in other applications.
@@ -30,10 +35,11 @@ public class KeyboardEventArgs : EventArgs
 
     #region Constructors
 
-    internal KeyboardEventArgs(Keys keys, Key currentKey)
+    internal KeyboardEventArgs(Keys keys, Key currentKey, bool isSimulator)
     {
         Keys = keys;
         CurrentKey = currentKey;
+        IsSimulator = isSimulator;
     }
 
     #endregion

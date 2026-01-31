@@ -51,8 +51,9 @@ public class MouseEventArgs : KeyboardEventArgs
     /// <param name="x">The x-coordinate of a mouse click, in pixels.</param>
     /// <param name="y">The y-coordinate of a mouse click, in pixels.</param>
     /// <param name="delta">A signed count of the number of detents the wheel has rotated.</param>
-    internal MouseEventArgs(int x, int y, int delta, bool isDoubleClick, Keys keys, Key currentKey) : 
-        base(keys, currentKey) 
+    /// <param name="isSimulator">Simulator flag</param>
+    internal MouseEventArgs(int x, int y, int delta, bool isDoubleClick, Keys keys, Key currentKey,bool isSimulator) : 
+        base(keys, currentKey,isSimulator) 
     {
         Position = new Point(x, y);
         Delta = delta;
