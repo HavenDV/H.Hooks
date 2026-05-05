@@ -6,11 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="8.9.0" />
-    <PackageReference Include="GitHubActionsTestLogger" Version="3.0.3">
+    <PackageReference Include="GitHubActionsTestLogger" Version="3.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="MSTest" Version="4.2.1" />
+    <PackageReference Include="MSTest" Version="4.2.2" />
   </ItemGroup>
 
   <ItemGroup Label="GlobalUsings">
